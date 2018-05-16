@@ -13,9 +13,9 @@ TagManager:
   - UI
   - 
   - 
-  - 
-  - 
-  - 
+  - Tile
+  - TileBounds
+  - Soul
   - 
   - 
   - 
@@ -40,4 +40,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Tile
+    uniqueID: 921879557
+    locked: 0
+  - name: SoulAndSpirit
+    uniqueID: 1253721321
     locked: 0
