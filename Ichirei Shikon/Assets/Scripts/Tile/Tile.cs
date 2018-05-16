@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 /// <summary>
 /// Specification(s):
@@ -10,9 +11,9 @@ using UnityEngine;
 /// </summary>
 public class Tile : MonoBehaviour {
 
-    const int UNTAINTED_TILE_SPRITE_INDEX = 0;
-    const int SHIELDED_TILE_SPRITE_INDEX = 1;
-    const int TAINTED_TILE_SPRITE_INDEX = 2;
+    protected enum SpriteIndices {
+        UNTAINTED = 0, SHIELDED = 1, TAINTED = 2
+    }
     /// <summary> Will be initialized by <see cref="TileManager"/> </summary> ///
     public static Sprite[] tileSprites;
     SpriteRenderer spriteRenderer;
@@ -34,18 +35,19 @@ public class Tile : MonoBehaviour {
         set { hasBarrier = value; }
     }
 
-    const int NUM_NEIGHBOUR_TILES = 4;
     /// <summary> Refers to the neighbouring left, right, top and bottom tiles of this tile. </summary> ///
-    List<Tile> neighbours = new List<Tile>(NUM_NEIGHBOUR_TILES);
+    List<Tile> neighbours = new List<Tile>(Constants.NUM_NEIGHBOURS);
 
 
     void Start () {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        Debug.Assert(spriteRenderer != null, "SpriteRenderer component is missing for a GameObject with Tile script.");
+
     }
 
     void OnTriggerEnter2D (Collider2D other) {
         Tile t = other.gameObject.GetComponent<Tile>();
-        if (t != null && !neighbours.Contains(t)) {
+        if (other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_NAME_TILE) && !neighbours.Contains(t)) {
             neighbours.Add(t);
         }
     }
@@ -53,9 +55,9 @@ public class Tile : MonoBehaviour {
     public void InitializeTile (bool isTainted) {
         if (isTainted) {
             isTainted = true;
-            spriteRenderer.sprite = tileSprites[TAINTED_TILE_SPRITE_INDEX];
+            UpdateSprite((int) SpriteIndices.TAINTED);
         } else {
-            spriteRenderer.sprite = tileSprites[UNTAINTED_TILE_SPRITE_INDEX];
+            UpdateSprite((int) SpriteIndices.UNTAINTED);
         }
     }
 
@@ -78,7 +80,7 @@ public class Tile : MonoBehaviour {
         if (!hasBarrier) {
             if (!isTainted) {
                 isTainted = true;
-                spriteRenderer.sprite = tileSprites[TAINTED_TILE_SPRITE_INDEX];
+                UpdateSprite((int) SpriteIndices.TAINTED);
             }
         }
     }
@@ -88,9 +90,10 @@ public class Tile : MonoBehaviour {
     /// </summary>
     public void Purify () {
         if (isTainted) {
+            Debug.Assert(tileManager != null, "'tileManager' is not initialized for GameObject with Tile script.");
             tileManager.RemoveTileFromTaintedList(this);
             isTainted = false;
-            spriteRenderer.sprite = tileSprites[UNTAINTED_TILE_SPRITE_INDEX];
+            UpdateSprite((int) SpriteIndices.UNTAINTED);
         }
     }
 
@@ -100,8 +103,31 @@ public class Tile : MonoBehaviour {
     public void Barrier () {
         if (!hasBarrier) {
             hasBarrier = true;
-            spriteRenderer.sprite = tileSprites[SHIELDED_TILE_SPRITE_INDEX];
+            UpdateSprite((int) SpriteIndices.SHIELDED);
         }
+    }
+
+    void UpdateSprite (int index) {
+        Debug.Assert(tileSprites != null, "'tileSprites' attribute is not initialized by TileManager.");
+        Debug.Assert(tileSprites[index] != null, "tileSprite[" + index + "] is missing.");
+        switch (index) {
+            case (int) SpriteIndices.UNTAINTED:
+                Debug.Assert(tileSprites[index].name == "Tile_Untainted", "tileSprites[" + index + "] does not match required sprite.");
+                break;
+
+            case (int) SpriteIndices.SHIELDED:
+                Debug.Assert(tileSprites[index].name == "Tile_Invulnerable", "tileSprites[" + index + "] does not match required sprite.");
+                break;
+
+            case (int) SpriteIndices.TAINTED:
+                Debug.Assert(tileSprites[index].name == "Tile_Tainted", "tileSprites[" + index + "] does not match required sprite.");
+                break;
+
+            default:
+                Debug.LogException(new System.Exception("Unexpected index encountered for UpdateSprite()."), this);
+                break;
+        }
+        spriteRenderer.sprite = tileSprites[index];
     }
 
 }

@@ -30,6 +30,7 @@ public class TileManager : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         InitializeTileProperties();
+        InitializeSoulProperties();
         UpdateTaintedTilesList();
     }
 
@@ -39,6 +40,10 @@ public class TileManager : MonoBehaviour {
     private void InitializeTileProperties () {
         Tile.tileManager = this;
         Tile.tileSprites = tileSprites;
+    }
+
+    private void InitializeSoulProperties () {
+        Soul.tileManager = this;
     }
 
     private void UpdateTaintedTilesList () {
@@ -60,8 +65,8 @@ public class TileManager : MonoBehaviour {
         }
     }
 
-    /* FOR DEBUGGING ONLY */
     public void TakeMove () {
         hasTakenMove = true;
+        UpdateTiles();
     }
 }
