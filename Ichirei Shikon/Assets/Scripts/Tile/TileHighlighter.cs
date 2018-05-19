@@ -20,7 +20,6 @@ public class TileHighlighter : MonoBehaviour {
     }
 
     public void Unhighlight () {
-        Debug.Assert(spriteRenderer.enabled == true, "SpriteRenderer should not already be disabled before tile highlighting is stopped.");
         spriteRenderer.enabled = false;
     }
 }

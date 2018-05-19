@@ -11,7 +11,7 @@ using UnityEngine.Assertions;
 /// </summary>
 public class Tile : MonoBehaviour {
 
-    protected enum SpriteIndices {
+    public enum SpriteIndices {
         UNTAINTED = 0, SHIELDED = 1, TAINTED = 2
     }
     /// <summary> Will be initialized by <see cref="TileManager"/> </summary> ///
@@ -112,15 +112,15 @@ public class Tile : MonoBehaviour {
         Debug.Assert(tileSprites[index] != null, "tileSprite[" + index + "] is missing.");
         switch (index) {
             case (int) SpriteIndices.UNTAINTED:
-                Debug.Assert(tileSprites[index].name == "Tile_Untainted", "tileSprites[" + index + "] does not match required sprite.");
+                Debug.Assert(tileSprites[index].name == Constants.UNTAINTED_TILE_NAME, "tileSprites[" + index + "] does not match required sprite.");
                 break;
 
             case (int) SpriteIndices.SHIELDED:
-                Debug.Assert(tileSprites[index].name == "Tile_Invulnerable", "tileSprites[" + index + "] does not match required sprite.");
+                Debug.Assert(tileSprites[index].name == Constants.SHIELDED_TILE_NAME, "tileSprites[" + index + "] does not match required sprite.");
                 break;
 
             case (int) SpriteIndices.TAINTED:
-                Debug.Assert(tileSprites[index].name == "Tile_Tainted", "tileSprites[" + index + "] does not match required sprite.");
+                Debug.Assert(tileSprites[index].name == Constants.TAINTED_TILE_NAME, "tileSprites[" + index + "] does not match required sprite.");
                 break;
 
             default:

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class TileManager : MonoBehaviour {
     
@@ -14,6 +15,8 @@ public class TileManager : MonoBehaviour {
     [SerializeField]
     Sprite[] tileSprites;
 
+    [SerializeField]
+    int totalNumberOfTiles;
     /// <summary>
     /// Stores all the tainted tiles that are in the current level.
     /// </summary>
@@ -29,25 +32,52 @@ public class TileManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        InitializeTileProperties();
-        InitializeSoulProperties();
-        UpdateTaintedTilesList();
+        InitializeTileSprites();
+        InitializeTileManagerForRequiredClasses();
+        UpdateTileRecords();
+    }
+
+    void Update () {
+        if (taintedTiles.Count == 0) {
+            TriggerVictory();
+        } else if (taintedTiles.Count == totalNumberOfTiles) {
+            TriggerGameOver();
+        }
     }
 
     /// <summary>
-    /// Sets the required static attributes/references in the Tile class.
+    /// Initializes the 3 types of tile sprites needed to reflect the 3 different tile states.
     /// </summary>
-    private void InitializeTileProperties () {
-        Tile.tileManager = this;
+    private void InitializeTileSprites () {
+        AssertCorrectTileSprites();
         Tile.tileSprites = tileSprites;
     }
 
-    private void InitializeSoulProperties () {
-        Soul.tileManager = this;
+    private void AssertCorrectTileSprites () {
+        Debug.Assert(tileSprites != null, "'tileSprites' in TileManager is not initialized.");
+        Debug.Assert(tileSprites.Length == Constants.NUM_TILE_SPRITES, "There are incorrect number of tile sprites in TileManager.");
+        Debug.Assert(tileSprites[(int) Tile.SpriteIndices.UNTAINTED].name == Constants.UNTAINTED_TILE_NAME, "Untainted tile sprite in TileManager is incorrect.");
+        Debug.Assert(tileSprites[(int) Tile.SpriteIndices.SHIELDED].name == Constants.SHIELDED_TILE_NAME, "Invulnerable tile sprite in TileManager is incorrect.");
+        Debug.Assert(tileSprites[(int) Tile.SpriteIndices.TAINTED].name == Constants.TAINTED_TILE_NAME, "Tainted tile sprite in TileManager is incorrect.");
     }
 
-    private void UpdateTaintedTilesList () {
-        taintedTiles = new List<Tile>(GameObject.FindObjectsOfType<Tile>()).FindAll(t => t.IsTainted);
+    /// <summary>
+    /// Sets the required static TileManager instance in classes that explicitly requires this instance.
+    /// </summary>
+    private void InitializeTileManagerForRequiredClasses () {
+        Soul.tileManager = this;
+        Spirit.tileManager = this;
+        Tile.tileManager = this;
+    }
+
+    /// <summary>
+    /// Primarily, this function updates the list of tainted tiles.
+    /// This will also retrieve the total number of tiles present in the level.
+    /// </summary>
+    private void UpdateTileRecords () {
+        Tile[] tilesInLevel = GameObject.FindObjectsOfType<Tile>();
+        totalNumberOfTiles = tilesInLevel.Length;
+        taintedTiles = new List<Tile>(tilesInLevel).FindAll(t => t.IsTainted);
     }
 
     public void RemoveTileFromTaintedList (Tile t) {
@@ -60,7 +90,7 @@ public class TileManager : MonoBehaviour {
                 t.Spread();
             }
 
-            UpdateTaintedTilesList ();
+            UpdateTileRecords ();
             hasTakenMove = false;
         }
     }
@@ -68,5 +98,13 @@ public class TileManager : MonoBehaviour {
     public void TakeMove () {
         hasTakenMove = true;
         UpdateTiles();
+    }
+
+    private void TriggerVictory () {
+        // TODO: implement victory screen
+    }
+
+    private void TriggerGameOver () {
+        // TODO: implement game over screen
     }
 }

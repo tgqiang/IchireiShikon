@@ -9,24 +9,34 @@ public class Constants : MonoBehaviour {
     public const int MOUSE_BUTTON_LEFT = 0;
 
     /* Game Conventions Configurations */
+    public const int NUM_TILE_SPRITES = 3;
+    public const string UNTAINTED_TILE_NAME = "Tile_Untainted";
+    public const string SHIELDED_TILE_NAME = "Tile_Invulnerable";
+    public const string TAINTED_TILE_NAME = "Tile_Tainted";
+
     public const int NUM_NEIGHBOURS = 4;
     public const int NUM_OBJECTS_FOR_MERGE = 3;
 
     /* Collision Related Configurations */
     public const string LAYER_NAME_DEFAULT = "Default";
     public const string LAYER_NAME_SOUL = "Soul";
+    public const string LAYER_NAME_SPIRIT = "Spirit";
     public const string LAYER_NAME_TILE = "Tile";
+    public const string LAYER_NAME_TILE_BOUNDS = "TileBounds";
 
     public const string COLLIDER_LEFT = "LeftCollider";
     public const string COLLIDER_RIGHT = "RightCollider";
     public const string COLLIDER_TOP = "TopCollider";
     public const string COLLIDER_BOTTOM = "BottomCollider";
 
+    public const float MERGEABLE_OBJECTS_Z_OFFSET = -1f;
+
     public const float NEIGHBOUR_CHECK_DELAY = 0.1f;
+    public const float TILE_TAINT_DELAY = 0.2f;
 
     // Raycasts are used for detecting the tile that an object should snap to,
     // and should ignore these collision layers.
-    public static LayerMask raycastLayersToIgnore;
+    public static LayerMask desiredRaycastLayers;
 
     /* Game Sprite Configurations */
     /// <summary> Color of the sprite when it is being acted on by the player input. </summary> ///
@@ -43,7 +53,7 @@ public class Constants : MonoBehaviour {
         mainCamera = Camera.main;
         Debug.Assert(mainCamera != null, "Main Camera is missing from game Scene.");
 
-        raycastLayersToIgnore = LayerMask.GetMask(LAYER_NAME_DEFAULT, LAYER_NAME_SOUL, LAYER_NAME_TILE);
+        desiredRaycastLayers = LayerMask.GetMask(LAYER_NAME_TILE_BOUNDS, LAYER_NAME_SOUL, LAYER_NAME_SPIRIT);
     }
 	
 	// Update is called once per frame
