@@ -15,11 +15,11 @@ TagManager:
   - 
   - Tile
   - TileBounds
+  - TaintedTileCollider
   - Soul
   - SoulBounds
   - Spirit
   - SpiritBounds
-  - 
   - 
   - 
   - 
