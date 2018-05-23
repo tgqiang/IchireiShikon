@@ -42,7 +42,6 @@ public class Tile : MonoBehaviour {
     void Start () {
         spriteRenderer = GetComponent<SpriteRenderer>();
         Debug.Assert(spriteRenderer != null, "SpriteRenderer component is missing for a GameObject with Tile script.");
-
     }
 
     void OnTriggerEnter2D (Collider2D other) {

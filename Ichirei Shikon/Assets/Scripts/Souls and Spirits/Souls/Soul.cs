@@ -5,14 +5,11 @@ using UnityEngine.Assertions;
 
 public class Soul : Mergeable {
 
-    protected enum SoulType {
+    public enum SoulType {
         ARAMITAMA, NIGIMITAMA, SAKIMITAMA, KUSHIMITAMA, NONE
     }
     protected SoulType soulType;
 
-    public enum ColliderIndex {
-        LEFT = 0, RIGHT = 1, TOP = 2, BOTTOM = 3
-    }
     public List<Soul> neighbourSouls = new List<Soul>(Constants.NUM_NEIGHBOURS);
 
 
@@ -28,19 +25,19 @@ public class Soul : Mergeable {
 
             switch (otherCollider) {
                 case Constants.COLLIDER_LEFT:
-                    neighbourSouls[(int) ColliderIndex.RIGHT] = s;
+                    neighbourSouls[(int) Constants.ColliderIndex.RIGHT] = s;
                     break;
 
                 case Constants.COLLIDER_RIGHT:
-                    neighbourSouls[(int) ColliderIndex.LEFT] = s;
+                    neighbourSouls[(int) Constants.ColliderIndex.LEFT] = s;
                     break;
 
                 case Constants.COLLIDER_TOP:
-                    neighbourSouls[(int) ColliderIndex.BOTTOM] = s;
+                    neighbourSouls[(int) Constants.ColliderIndex.BOTTOM] = s;
                     break;
 
                 case Constants.COLLIDER_BOTTOM:
-                    neighbourSouls[(int) ColliderIndex.TOP] = s;
+                    neighbourSouls[(int) Constants.ColliderIndex.TOP] = s;
                     break;
 
                 default:
@@ -75,27 +72,26 @@ public class Soul : Mergeable {
         // We introduce a delay to ensure that the list of neighbouring Souls are updated before we check for possible merging operation.
         yield return new WaitForSeconds(Constants.NEIGHBOUR_CHECK_DELAY);
         AttemptMerge();
-
-        yield return new WaitForSeconds(Constants.TILE_TAINT_DELAY);
-        tileManager.TakeMove();
+        tileManager.TakeMove();     // TODO: investigate why putting this call as another coroutine does not trigger this call.
     }
 
     /// <summary>
-    /// Queries for all souls of same type that is connected to this soul.
+    /// Queries for all souls that are connected to this soul, subject to desired
+    /// constraints on whether the connected souls must be of the same type as this one.
     /// </summary>
     /// <param name="result"></param>
-    /// <returns>A list of all souls connected to this soul, which is of the same type.</returns>
+    /// <returns>A list of all souls connected to this soul, subjected to whether the same type of soul was required or not.</returns>
     protected virtual List<Soul> QueryConnectedSouls (List<Soul> result, bool sameTypeRequired = true, SoulType requiredType = SoulType.NONE) {
 
         if (!result.Contains(this)) result.Add(this);
 
-        Soul left = neighbourSouls[(int) ColliderIndex.LEFT];
-        Soul right = neighbourSouls[(int) ColliderIndex.RIGHT];
-        Soul top = neighbourSouls[(int) ColliderIndex.TOP];
-        Soul bottom = neighbourSouls[(int) ColliderIndex.BOTTOM];
+        Soul left = neighbourSouls[(int) Constants.ColliderIndex.LEFT];
+        Soul right = neighbourSouls[(int) Constants.ColliderIndex.RIGHT];
+        Soul top = neighbourSouls[(int) Constants.ColliderIndex.TOP];
+        Soul bottom = neighbourSouls[(int) Constants.ColliderIndex.BOTTOM];
 
         if (left != null) {
-            if (sameTypeRequired && left.soulType == requiredType) {
+            if (sameTypeRequired && Equals(left.soulType, requiredType)) {
                 if (!result.Contains(left)) result = left.QueryConnectedSouls(result, true, requiredType);
             } else if (!sameTypeRequired) {
                 if (!result.Contains(left)) result = left.QueryConnectedSouls(result, false);
@@ -103,7 +99,7 @@ public class Soul : Mergeable {
         }
 
         if (right != null) {
-            if (sameTypeRequired && right.soulType == requiredType) {
+            if (sameTypeRequired && Equals(right.soulType, requiredType)) {
                 if (!result.Contains(right)) result = right.QueryConnectedSouls(result, true, requiredType);
             } else if (!sameTypeRequired) {
                 if (!result.Contains(right)) result = right.QueryConnectedSouls(result, false);
@@ -111,7 +107,7 @@ public class Soul : Mergeable {
         }
 
         if (top != null) {
-           if (sameTypeRequired && top.soulType == requiredType) {
+           if (sameTypeRequired && Equals(top.soulType, requiredType)) {
                 if (!result.Contains(top)) result = top.QueryConnectedSouls(result, true, requiredType);
             } else if (!sameTypeRequired) {
                 if (!result.Contains(top)) result = top.QueryConnectedSouls(result, false);
@@ -119,7 +115,7 @@ public class Soul : Mergeable {
         }
 
         if (bottom != null) {
-            if (sameTypeRequired && bottom.soulType == requiredType) {
+            if (sameTypeRequired && Equals(bottom.soulType, requiredType)) {
                 if (!result.Contains(bottom)) result = bottom.QueryConnectedSouls(result, true, requiredType);
             } else if (!sameTypeRequired) {
                 if (!result.Contains(bottom)) result = bottom.QueryConnectedSouls(result, false);
@@ -137,9 +133,11 @@ public class Soul : Mergeable {
         List<Soul> connectedSoulsOfSameType = QueryConnectedSouls(new List<Soul>(), requiredType: this.soulType);
         List<Soul> connectedSoulsOfAnyType = QueryConnectedSouls(new List<Soul>(), false);
 
+        /*
         foreach (Soul t in connectedSoulsOfSameType) {
             Debug.Log(t);
         }
+        */
         
         int numSoulsAramitama = connectedSoulsOfAnyType.FindAll(s => s.soulType == SoulType.ARAMITAMA).Count;
         int numSoulsNigimitama = connectedSoulsOfAnyType.FindAll(s => s.soulType == SoulType.NIGIMITAMA).Count;
