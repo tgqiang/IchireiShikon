@@ -63,19 +63,19 @@ Harvest the power of the 4 souls to purify the demonic auras with spiritual powe
 
 2. _**3x Nigimitama soul --> Spirit of Friendship**_
 
-   > (A) This spirit can amplify the powers of nearby souls. The amplification extent depends on this spirit's level. **(OLD IDEA)**
+   ~> (A) This spirit can amplify the powers of nearby souls. The amplification extent depends on this spirit's level. **(OLD IDEA)**
 
    ~ Spirit of Courage: increase explosion radius
    
-   ~ Spirit of Friendship: increase amplification effects
+   ~ Spirit of Friendship: increase ~~amplification effects~~ level range of Spirits that it can apply the buff to
    
    ~ Spirit of Love: increase number of primitive elements spawned
    
    ~ Spirit of Wisdom: increase area of effect
 
-   OR
+   ~~OR~~ **AND**
 
-   > (B) This spirit casts a buff in an AoE that adds 1 level to affected spirits **(NEW IDEA)**
+   > **Design implementation as of 25/5/2018:** (B) This spirit casts a buff in an AoE **that purifies cells (added on 25/5/2018)** and also adds 1 level to affected spirits **(NEW IDEA)**
 
    **Level 1**: only affects level 1 spirits
    
@@ -84,6 +84,10 @@ Harvest the power of the 4 souls to purify the demonic auras with spiritual powe
    **Level 3**: affects level 1~3 spirits
    
    **Level 4**: affects level 1~4 spirits
+   
+   ~ **Design implementation as of 25/5/2018:** AoE size is currently fixed at 3x3 square area, as an arbitrary start-off point.
+   
+   ~ **Rationale for design implementations/additions:** I am presuming that having spirits that do not purify cells at all may lead to players not being likely to use them, since cell-tainting spreads each time a turn is taken and the move-cost for setup for this spirit does not seem to be very worth it.
    
    ~ Level cap for _Spirit of Friendship_ and _Spirit of Harmony_ is **strictly capped at 4**
    
@@ -104,6 +108,8 @@ Harvest the power of the 4 souls to purify the demonic auras with spiritual powe
    **Level 4**: 8 souls spawned (at immediate surrounding cells)
    
    **Level 5**: 8 souls spawned + a random level-1 spirit spawned at center
+   
+   ~ **Design implementation as of 25/5/2018:** Might change spawn positions/formulae to fit current game structure more easily. To be confirmed later on.
 
 
 
@@ -111,18 +117,21 @@ Harvest the power of the 4 souls to purify the demonic auras with spiritual powe
 
    > This spirit purifies its current cell so immensely, that no demonic aura may spread to it.
    > This effect can be temporary (lasts for X turns, where X is the level of the Spirit of Wisdom that was triggered) or permanent
+   > **Design implementation as of 25/5/2018:** Cells are purified in a cross-shape of radius R, which means R cells spanning from center cell, both horizontally and vertically, will be purified.
 
    (for this spirit, all cells it purifies are invulnerable to demonic auras)
    
-   **Level 1**: Purifies 1 cell (the current cell that the spirit is located at)
+   **Level 1**: Purifies cells in cross-shape, of radius 1 (the current cell that the spirit is located at)
    
-   **Level 2**: Purifies 3 cells (left, right, middle)
+   **Level 2**: Purifies cells in cross-shape, of radius 2 (left, right, top, bottom, middle)
    
-   **Level 3**: Purifies 5 cells (left, right, top, bottom, middle)
+   **Level 3**: Purifies cells in cross-shape, of radius 3
    
-   **Level 4**: Purifies 7 cells (left, right, top, bottom, top-left, bottom-right, middle)
+   **Level 4**: Purifies cells in cross-shape, of radius 4
    
-   **Level 5**: Purifies 9 cells (middle + immediate 8 surrounding cells)
+   **Level 5**: Purifies cells in cross-shape, of radius 5
+   
+   ~ **Rationale for design implementations/additions:** current implementation seems less of a hassle for now based on current game structure, and currently using this as a start-off point. Will modify this where required at a later time, after first playtesting is achieved.
 
 
 
@@ -130,7 +139,7 @@ Harvest the power of the 4 souls to purify the demonic auras with spiritual powe
 
    > This spirit contains (approximately) ALL the effects of the 4 different types of spirits, effect degree dependent on spirit's level
    
-   - Purifies an area in an explosion (this explosion **does not destroy souls or spirits**)
+   - Purifies an area in an explosion (this explosion **does not destroy souls or spirits**), AoE follows that of Spirit of Courage.
    - Purified area is made invulnerable to demonic aura
    - Spawns souls at purified areas
-   - If a spirit (**that is not Spirit of Harmony or Spirit of Friendship**) is caught in the explosion, they have their levels incremented by 1.
+   - If a spirit (**that is not a maxed-level Spirit of Harmony or Spirit of Friendship**) is caught in the explosion, they have their levels incremented by 1.
