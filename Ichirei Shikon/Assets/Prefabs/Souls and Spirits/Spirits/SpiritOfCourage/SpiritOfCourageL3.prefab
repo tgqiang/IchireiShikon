@@ -383,6 +383,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level: 3
+  levelSprites:
+  - {fileID: 21300000, guid: 5c2ac3b97a9771a4e9e787eec08f4d6e, type: 3}
+  - {fileID: 21300000, guid: f8819fdfe8fdcaf4c926b93d13d0c405, type: 3}
+  - {fileID: 21300000, guid: 92b0e9484bfcb7e44a7325e042b3f208, type: 3}
+  - {fileID: 21300000, guid: 1bd0fbf804cf01d479d6f5180eb07eab, type: 3}
+  - {fileID: 21300000, guid: 8ba9ddc2c9d060046917dc71ec3744a7, type: 3}
   neighbourSpirits:
   - {fileID: 0}
   - {fileID: 0}
@@ -422,7 +428,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1253721321
   m_SortingLayer: 2
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 92b0e9484bfcb7e44a7325e042b3f208, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
