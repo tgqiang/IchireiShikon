@@ -18,7 +18,7 @@ public class SoulPool : ObjectPool {
             List<GameObject> soulObjList = new List<GameObject>();
 
             for (int j = 0; j < quantity; j++) {
-                GameObject o = Instantiate(soulObj);
+                GameObject o = Instantiate(soulObj, parentTransform);
                 o.SetActive(false);      // TODO: when finalized, uncheck the prefab's active state
                 soulObjList.Add(o);
             }

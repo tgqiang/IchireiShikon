@@ -49,11 +49,11 @@ public class SpiritPool : ObjectPool {
 
             for (int j = 0; j < quantity; j++) {
                 for (int q = 0; q < quantity; q++) {
-                    GameObject c = Instantiate(spiritCourageObj);
-                    GameObject f = Instantiate(spiritFriendshipObj);
-                    GameObject l = Instantiate(spiritLoveObj);
-                    GameObject w = Instantiate(spiritWisdomObj);
-                    GameObject h = Instantiate(spiritHarmonyObj);
+                    GameObject c = Instantiate(spiritCourageObj, parentTransform);
+                    GameObject f = Instantiate(spiritFriendshipObj, parentTransform);
+                    GameObject l = Instantiate(spiritLoveObj, parentTransform);
+                    GameObject w = Instantiate(spiritWisdomObj, parentTransform);
+                    GameObject h = Instantiate(spiritHarmonyObj, parentTransform);
 
                     c.SetActive(false);      // TODO: when finalized, uncheck the prefab's active state
                     f.SetActive(false);      // TODO: when finalized, uncheck the prefab's active state

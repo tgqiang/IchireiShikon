@@ -6,6 +6,8 @@ using UnityEngine.Assertions;
 public class ObjectPool : MonoBehaviour {
 
     [SerializeField]
+    protected Transform parentTransform;
+    [SerializeField]
     protected int quantity;
     [SerializeField]
     protected GameObject[] prefabs;
