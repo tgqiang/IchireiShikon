@@ -29,7 +29,12 @@ public class SoulPool : ObjectPool {
 
     protected GameObject RetrieveSoul (Soul.SoulType requiredType) {
         Debug.Assert(!Equals(requiredType, Soul.SoulType.NONE), "Invalid SoulType requested for in SoulPool.");
-        int index = (int) requiredType;
+        return RetrieveSoul((int) requiredType);
+    }
+
+    protected GameObject RetrieveSoul (int requiredType) {
+        Debug.Assert(requiredType < (int) Soul.SoulType.NONE, "Invalid integer 'requiredType' received in RetrieveSoul for SoulPool.");
+        int index = requiredType;
 
         for (int i = 0; i < quantity; i++) {
             if (!soulObjects[index][i].activeSelf) {
@@ -38,6 +43,36 @@ public class SoulPool : ObjectPool {
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Spawns a random type of Soul in the Scene.
+    /// 
+    /// Note that the caller of this method MUST check if the spot where the Soul should be spawned is VACANT before calling this.
+    /// </summary>
+    /// <param name="desiredPosition">Where the Soul should be spawned, which typically is a vacant tile's position.</param>
+    public void SpawnRandomSoul (Vector3 desiredPosition) {
+        // { ALL SOULTYPES } \ { NONE }
+        int soulType = Random.Range((int) Soul.SoulType.ARAMITAMA, (int) Soul.SoulType.NONE);
+        GameObject soulObj = RetrieveSoul(soulType);
+        SpawnSoulObjectInScene(desiredPosition, soulObj);
+    }
+
+    /// <summary>
+    /// Finds a Soul object that can be used from the object pool, and spawns it in the game Scene.
+    /// 
+    /// Note that the caller of this method MUST check if the spot where the Soul should be spawned is VACANT before calling this.
+    /// </summary>
+    /// <param name="requiredType">The desired type of Soul to spawn in the Scene.</param>
+    /// <param name="desiredPosition">Where the Soul should be spawned, which typically is a vacant tile's position.</param>
+    public void SpawnSoul (Soul.SoulType requiredType, Vector3 desiredPosition) {
+        GameObject soulObj = RetrieveSoul(requiredType);
+        SpawnSoulObjectInScene(desiredPosition, soulObj);
+    }
+
+    private static void SpawnSoulObjectInScene (Vector3 desiredPosition, GameObject soulObj) {
+        soulObj.transform.position = desiredPosition;
+        soulObj.SetActive(true);
     }
 
     protected override void AssertRequiredConditions () {

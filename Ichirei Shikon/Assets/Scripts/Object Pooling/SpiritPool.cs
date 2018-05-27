@@ -24,15 +24,17 @@ public class SpiritPool : ObjectPool {
      */
 
     // Each of these list of lists stores the same type of Spirit objects for all 5 levels.
-    List<List<GameObject>> spiritCourageObjects = new List<List<GameObject>>();
-    List<List<GameObject>> spiritFriendshipObjects = new List<List<GameObject>>();
-    List<List<GameObject>> spiritLoveObjects = new List<List<GameObject>>();
-    List<List<GameObject>> spiritWisdomObjects = new List<List<GameObject>>();
-    List<List<GameObject>> spiritHarmonyObjects = new List<List<GameObject>>();
+    List<List<List<GameObject>>> spiritObjects = new List<List<List<GameObject>>>();
 
     // Use this for initialization
     protected override void Start () {
         AssertRequiredConditions();
+
+        List<List<GameObject>> spiritCourageObjects = new List<List<GameObject>>();
+        List<List<GameObject>> spiritFriendshipObjects = new List<List<GameObject>>();
+        List<List<GameObject>> spiritLoveObjects = new List<List<GameObject>>();
+        List<List<GameObject>> spiritWisdomObjects = new List<List<GameObject>>();
+        List<List<GameObject>> spiritHarmonyObjects = new List<List<GameObject>>();
 
         for (int i = 0; i < Constants.NUM_SPIRIT_LEVELS; i++) {
             GameObject spiritCourageObj = prefabs[(int) Spirit.SpiritType.COURAGE * Constants.NUM_SPIRIT_LEVELS + i];
@@ -74,62 +76,76 @@ public class SpiritPool : ObjectPool {
             spiritLoveObjects.Add(spiritLoveObjList);
             spiritWisdomObjects.Add(spiritWisdomObjList);
             spiritHarmonyObjects.Add(spiritHarmonyObjList);
+
+            spiritObjects.Add(spiritCourageObjects);
+            spiritObjects.Add(spiritFriendshipObjects);
+            spiritObjects.Add(spiritLoveObjects);
+            spiritObjects.Add(spiritWisdomObjects);
+            spiritObjects.Add(spiritHarmonyObjects);
         }
     }
 
     protected GameObject RetrieveSpirit (Spirit.SpiritType requiredType, int requiredLevel) {
         Debug.Assert(!Equals(requiredType, Spirit.SpiritType.NONE), "Invalid SpiritType requested for in SpiritPool.");
         Debug.Assert(requiredLevel > 0 && requiredLevel <= Constants.NUM_SPIRIT_LEVELS, "Invalid Spirit level requested for in SpiritPool");
+        
+        if (Equals(requiredType, Spirit.SpiritType.NONE)) {
+            Debug.LogException(new System.Exception("Invalid SpiritType encountered in RetrieveSpirit() in SpiritPool."));
+            return null;
+        } else {
+            return RetrieveSpirit((int) requiredType, requiredLevel);
+        }
+    }
 
-        int index = requiredLevel;
+    protected GameObject RetrieveSpirit (int requiredType, int requiredLevel) {
+        Debug.Assert(requiredType < (int) Spirit.SpiritType.NONE, "Invalid integer 'requiredType' received in RetrieveSpirit for SpiritPool.");
+        Debug.Assert(requiredLevel > 0 && requiredLevel <= Constants.NUM_SPIRIT_LEVELS, "Invalid Spirit level requested for in SpiritPool");
 
-        switch (requiredType) {
-            case Spirit.SpiritType.COURAGE:
-                for (int i = 0; i < quantity; i++) {
-                    if (!spiritCourageObjects[index][i].activeSelf) {
-                        return spiritCourageObjects[index][i];
-                    }
-                }
-                break;
+        int index = requiredLevel - 1;
 
-            case Spirit.SpiritType.FRIENDSHIP:
-                for (int i = 0; i < quantity; i++) {
-                    if (!spiritFriendshipObjects[index][i].activeSelf) {
-                        return spiritFriendshipObjects[index][i];
-                    }
-                }
-                break;
-
-            case Spirit.SpiritType.LOVE:
-                for (int i = 0; i < quantity; i++) {
-                    if (!spiritLoveObjects[index][i].activeSelf) {
-                        return spiritLoveObjects[index][i];
-                    }
-                }
-                break;
-
-            case Spirit.SpiritType.WISDOM:
-                for (int i = 0; i < quantity; i++) {
-                    if (!spiritWisdomObjects[index][i].activeSelf) {
-                        return spiritWisdomObjects[index][i];
-                    }
-                }
-                break;
-
-            case Spirit.SpiritType.HARMONY:
-                for (int i = 0; i < quantity; i++) {
-                    if (!spiritHarmonyObjects[index][i].activeSelf) {
-                        return spiritHarmonyObjects[index][i];
-                    }
-                }
-                break;
-
-            default:
-                Debug.LogException(new System.Exception("Unknown SpirirtType encountered in RetrieveSpirit() in SpiritPool."));
-                return null;
+        for (int i = 0; i < quantity; i++) {
+            if (!spiritObjects[requiredType][index][i].activeSelf) {
+                return spiritObjects[requiredType][index][i];
+            }
         }
 
         return null;
+    }
+
+    /// <summary>
+    /// Spawns a random type of Spirit in the Scene.
+    /// 
+    /// Note that the caller of this method MUST check if the spot where the Spirit should be spawned is VACANT before calling this.
+    /// </summary>
+    /// <param name="desiredPosition">Where the Spirit should be spawned, which typically is a vacant tile's position.</param>
+    public void SpawnRandomSpirit (int desiredLevel, Vector3 desiredPosition) {
+        // { ALL SPIRITTYPES } \ { NONE }
+        int spiritType = Random.Range((int) Spirit.SpiritType.COURAGE, (int) Spirit.SpiritType.NONE);
+        GameObject spiritObj = RetrieveSpirit(spiritType, desiredLevel);
+        SpawnSpiritObjectInScene(desiredPosition, desiredLevel, spiritObj);
+    }
+
+    /// <summary>
+    /// Finds a Spirit object that can be used from the object pool, and spawns it in the game Scene.
+    /// 
+    /// Note that the caller of this method MUST check if the spot where the Spirit should be spawned is VACANT before calling this.
+    /// </summary>
+    /// <param name="desiredType">The desired type of Spirit to spawn in the Scene.</param>
+    /// <param name="desiredPosition">Where the Spirit should be spawned, which typically is a vacant tile's position.</param>
+    public void SpawnSpirit (Spirit.SpiritType desiredType, int desiredLevel, Vector3 desiredPosition) {
+        GameObject spiritObj = RetrieveSpirit(desiredType, desiredLevel);
+        SpawnSpiritObjectInScene(desiredPosition, desiredLevel, spiritObj);
+    }
+
+    private static void SpawnSpiritObjectInScene (Vector3 desiredPosition, int desiredLevel, GameObject spiritObj) {
+        /*
+         * Object pool indices are intended to query only the appropriate Spirit objects from the object pool.
+         * However, Spirit interactions may have distorted the correct states of objects inside the object pool due to object reuse,
+         * so we reset the Spirit object's state accordingly before putting it back into the Scene.
+         */
+        spiritObj.GetComponent<Spirit>().SetLevel(desiredLevel);
+        spiritObj.transform.position = desiredPosition;
+        spiritObj.SetActive(true);
     }
 
     protected override void AssertRequiredConditions () {
