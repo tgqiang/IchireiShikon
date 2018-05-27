@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class SoulNigimitama : Soul {
 
-    protected override void Start () {
-        base.Start();
+    protected override void Awake () {
+        base.Awake();
         soulType = SoulType.NIGIMITAMA;
     }
 

@@ -13,8 +13,8 @@ public class Soul : Mergeable {
     public List<Soul> neighbourSouls = new List<Soul>(Constants.NUM_NEIGHBOURS);
 
 
-    protected override void Start () {
-        base.Start();
+    protected override void Awake () {
+        base.Awake();
         Debug.Assert(neighbourSouls.Count == Constants.NUM_NEIGHBOURS, "List of neighbours in Soul is of incorrect length.");
     }
 
@@ -132,12 +132,6 @@ public class Soul : Mergeable {
     protected override void AttemptMerge () {
         List<Soul> connectedSoulsOfSameType = QueryConnectedSouls(new List<Soul>(), requiredType: this.soulType);
         List<Soul> connectedSoulsOfAnyType = QueryConnectedSouls(new List<Soul>(), false);
-
-        /*
-        foreach (Soul t in connectedSoulsOfSameType) {
-            Debug.Log(t);
-        }
-        */
         
         int numSoulsAramitama = connectedSoulsOfAnyType.FindAll(s => s.soulType == SoulType.ARAMITAMA).Count;
         int numSoulsNigimitama = connectedSoulsOfAnyType.FindAll(s => s.soulType == SoulType.NIGIMITAMA).Count;
@@ -177,27 +171,31 @@ public class Soul : Mergeable {
         if (specialCaseSatisfied) {
             // Spawn a Spirit of Harmony
             Debug.Log("Spawning a Spirit of Harmony.");
+            Constants.spiritPool.SpawnSpirit(Spirit.SpiritType.HARMONY, 1, this.transform.position);
         } else {
-            // TODO: create/"create" the corresponding Spirit GameObject at current position.
             switch (soulType) {
                 case SoulType.ARAMITAMA:
                     // Spawn a Spirit of Courage
                     Debug.Log("Spawning a Spirit of Courage.");
+                    Constants.spiritPool.SpawnSpirit(Spirit.SpiritType.COURAGE, 1, this.transform.position);
                     break;
 
                 case SoulType.NIGIMITAMA:
                     // Spawn a Spirit of Friendship
                     Debug.Log("Spawning a Spirit of Friendship.");
+                    Constants.spiritPool.SpawnSpirit(Spirit.SpiritType.FRIENDSHIP, 1, this.transform.position);
                     break;
 
                 case SoulType.SAKIMITAMA:
                     // Spawn a Spirit of Love
                     Debug.Log("Spawning a Spirit of Love.");
+                    Constants.spiritPool.SpawnSpirit(Spirit.SpiritType.LOVE, 1, this.transform.position);
                     break;
 
                 case SoulType.KUSHIMITAMA:
                     // Spawn a Spirit of Wisdom
                     Debug.Log("Spawning a Spirit of Wisdom.");
+                    Constants.spiritPool.SpawnSpirit(Spirit.SpiritType.WISDOM, 1, this.transform.position);
                     break;
 
                 default:

@@ -1,0 +1,71 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Assertions;
+
+/*
+ * This is a generic implementation of a SpiritEffect script.
+ * Note that depending on requirements, you may or may not use this in its entirety.
+ * 
+ * Notice that for example, SpiritOfWisdomEffect script is implemented quite differently,
+ * owing to a different shape/form of its area-of-effect.
+ */
+public class SpiritEffect : MonoBehaviour {
+
+    public const string NAME = <name of SpiritEffect GameObject present in Scene>;
+    SpriteRenderer spriteRenderer;
+    BoxCollider2D boxCollider;
+
+    List<T> requiredListOfObjects = new List<T>();
+    ...
+
+    // Use this for initialization
+    void Start () {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        Debug.Assert(spriteRenderer != null, "SpriteRenderer component missing from a game object containing the SpiritEffect script.");
+
+        boxCollider = GetComponent<BoxCollider2D>();
+        Debug.Assert(boxCollider != null, "BoxCollider2D component missing from a game object containing the SpiritEffect script.");
+    }
+
+    public void Highlight (Vector3 targetPosition, int level) {
+        transform.position = targetPosition;
+        Vector2 effectSize = <desired formula for size of sprite and collider>;
+        boxCollider.size = effectSize - Constants.COLLIDER_SCALE_OFFSET * Vector2.one;
+        spriteRenderer.size = effectSize;
+        spriteRenderer.enabled = true;
+    }
+
+    public void Unhighlight () {
+        spriteRenderer.enabled = false;
+    }
+
+    public void CastEffect () {
+        foreach (T object in requiredListOfObjects) {
+            object.DoSomething();
+        }
+
+        ...
+    }
+
+    void OnTriggerEnter2D (Collider2D other) {
+        T object = other.gameObject.GetComponentInParent<T>();
+        ...
+
+        if (object != null && Equals(object.gameObject.layer, LayerMask.NameToLayer(Constants.LAYER_NAME_<desired_layer>))) {
+            if (!requiredListOfObjects.Contains(object)) {
+                requiredListOfObjects.Add(object);
+            }
+        }
+
+        ...
+    }
+
+    void OnTriggerExit2D (Collider2D other) {
+        T object = other.gameObject.GetComponentInParent<T>();
+        requiredListOfObjects.Remove(object);
+
+        ...
+    }
+
+}

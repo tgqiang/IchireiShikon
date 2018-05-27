@@ -30,21 +30,21 @@ public class Mergeable : MonoBehaviour {
     /// </summary>
     protected bool wasDisplaced;
 
+    protected float timeSinceInput;     // for tracking whether player input is a "tap" or a "touch-and-drag"
 
-    // Use this for initialization
-    protected virtual void Start () {
-        prevPosition = transform.position;
-        nearestTilePosition = transform.position;
 
+    protected virtual void Awake () {
         spriteRenderer = GetComponent<SpriteRenderer>();
         Debug.Assert(spriteRenderer != null, "SpriteRenderer component is missing for a GameObject containing the Mergeable script.");
 
-        tileHighlighter = GameObject.Find(TileHighlighter.NAME).GetComponent<TileHighlighter>();
-        Debug.Assert(tileHighlighter != null, "Tile Highlighter GameObject/Component is missing. Also check if TileHighlighter.NAME attribute matches the tile-highlight game object.");
-
         colliderSelf = GetComponent<BoxCollider2D>();
         Debug.Assert(colliderSelf != null, "BoxCollider 2D component is missing for a GameObject containing the Mergeable script.");
-	}
+
+        prevPosition = transform.position;
+        nearestTilePosition = transform.position;
+
+        Debug.Assert(tileHighlighter != null, "Tile Highlighter GameObject/Component is missing, likely not set by TileHighlighter script. Also check if TileHighlighter Game Object exists in scene.");
+    }
 	
 	// Update is called once per frame
 	protected virtual void Update () {
@@ -54,6 +54,7 @@ public class Mergeable : MonoBehaviour {
         }
 
         if (Input.GetMouseButton(Constants.MOUSE_BUTTON_LEFT)) {
+            timeSinceInput += Time.deltaTime;
             OnGrab();
         }
 
@@ -77,22 +78,28 @@ public class Mergeable : MonoBehaviour {
 
     protected virtual void OnGrab () {
         if (isActive) {
-            Vector3 worldPoint = Constants.mainCamera.ScreenToWorldPoint(Input.mousePosition);
-            // TODO: adjust this for mobile version.
-            RaycastHit2D hit = Physics2D.Raycast(new Vector2(worldPoint.x, worldPoint.y), Vector2.zero, Mathf.Infinity, Constants.desiredRaycastLayers);
-
-            // If raycast hits a collider with a Tile component, that Tile is unoccupied.
-            if (hit) {
-                if (hit.collider.name == Constants.LAYER_NAME_TILE_BOUNDS || hit.collider == colliderSelf) {
-                    tileHighlighter.Highlight(hit.transform.position);
-                    nearestTilePosition = hit.transform.position;
-                }
-            }
-            spriteRenderer.color = Constants.colorActive;
+            HighlightCurrentTileSpot();
         }
     }
 
+    protected virtual void HighlightCurrentTileSpot () {
+        Vector3 worldPoint = Constants.mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        // TODO: adjust this for mobile version.
+        RaycastHit2D hit = Physics2D.Raycast(new Vector2(worldPoint.x, worldPoint.y), Vector2.zero, Mathf.Infinity, Constants.desiredRaycastLayers);
+
+        // If raycast hits a collider with a Tile component, that Tile is unoccupied.
+        if (hit) {
+            if (hit.collider.name == Constants.LAYER_NAME_TILE_BOUNDS || hit.collider == colliderSelf) {
+                tileHighlighter.Highlight(hit.transform.position);
+                nearestTilePosition = hit.transform.position;
+            }
+        }
+        spriteRenderer.color = Constants.colorActive;
+    }
+
     protected virtual void OnRelease () {
+        CheckPlayerInputType();
+
         if (isActive) {
             if (HasMovedFromOldPosition()) {
                 DisplaceObject();
@@ -100,6 +107,16 @@ public class Mergeable : MonoBehaviour {
             }
 
             SetObjectToInactiveState();
+        }
+
+        timeSinceInput = 0;
+    }
+
+    protected virtual void CheckPlayerInputType () {
+        if (timeSinceInput <= Constants.INPUT_DIFFERENTIATION_THRESHOLD) {
+            Debug.Log("Tap registered.");
+        } else {
+            Debug.Log("Touch-and-drag registered.");
         }
     }
 
@@ -119,6 +136,8 @@ public class Mergeable : MonoBehaviour {
         gameObject.transform.position = prevPosition;
         spriteRenderer.color = Constants.colorInactive;
         tileHighlighter.Unhighlight();
+
+        timeSinceInput = 0f;
     }
 
     protected virtual void AttemptMerge () {

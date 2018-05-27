@@ -5,8 +5,8 @@ using UnityEngine;
 public class SoulAramitama : Soul {
 
     // Use this for initialization
-    protected override void Start () {
-        base.Start();
+    protected override void Awake () {
+        base.Awake();
         soulType = SoulType.ARAMITAMA;
 	}
 
