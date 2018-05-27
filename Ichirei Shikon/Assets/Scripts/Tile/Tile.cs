@@ -100,6 +100,10 @@ public class Tile : MonoBehaviour {
     /// Shields this tile from tainting, if it wasn't shielded previously.
     /// </summary>
     public void Barrier () {
+        if (isTainted) {
+            tileManager.RemoveTileFromTaintedList(this);
+            isTainted = false;
+        }
         if (!hasBarrier) {
             hasBarrier = true;
             UpdateSprite((int) SpriteIndices.SHIELDED);
