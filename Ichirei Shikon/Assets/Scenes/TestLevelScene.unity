@@ -458,6 +458,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 212973112285638422, guid: 89a84182b0d08db469123a14f8ab85ad,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 89a84182b0d08db469123a14f8ab85ad, type: 2}
   m_IsPrefabParent: 0
@@ -1230,7 +1235,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_BackGroundColor: {r: 0, g: 0.60784316, b: 1, a: 1}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -3608,6 +3613,11 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 212158168427560842, guid: cee4c7fb65acf0c418ff33bad4051356,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cee4c7fb65acf0c418ff33bad4051356, type: 2}
   m_IsPrefabParent: 0
@@ -3705,9 +3715,55 @@ MonoBehaviour:
   m_GameObject: {fileID: 1352727255}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 414384939db515246bfb0d58455ae729, type: 3}
+  m_Script: {fileID: 11500000, guid: 970d8cceeab8f4c4893e7af5d825c237, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  INPUT_DIFFERENTIATION_THRESHOLD: 0.4
+  NUM_SPIRIT_LEVELS: 5
+  MIN_OBJECT_POOL_QUANTITY: 20
+  soulPool: {fileID: 1369829367}
+  spiritPool: {fileID: 1369829366}
+  UNTAINTED_TILE_NAME: Tile_Untainted
+  SHIELDED_TILE_NAME: Tile_Invulnerable
+  TAINTED_TILE_NAME: Tile_Tainted
+  NEIGHBOUR_CHECK_DELAY: 0.1
+  TILE_TAINT_DELAY: 0.2
+  NUM_OBJECTS_FOR_MERGE: 3
+  MAX_SPIRIT_LEVEL_UNBUFFED: 4
+  MAX_SPIRIT_LEVEL_BUFFED: 5
+  SPIRIT_OF_LOVE_SOULS_SPAWNED_AT_LEVEL: 0200000004000000060000000800000008000000
+  LAYER_NAMES:
+  - Default
+  - Tile
+  - TileBounds
+  - TaintedTileCollider
+  - Soul
+  - SoulBounds
+  - Spirit
+  - SpiritBounds
+  NUM_COLLISION_LAYERS_USED: 8
+  MERGEABLE_OBJECTS_Z_OFFSET: -1
+  COLLIDER_SCALE_OFFSET: 0.35
+  desiredRaycastLayers:
+    serializedVersion: 2
+    m_Bits: 20992
+  colorActive: {r: 1, g: 1, b: 1, a: 0.5}
+  colorInactive: {r: 1, g: 1, b: 1, a: 1}
+  colorGameOver: {r: 0, g: 0, b: 0, a: 1}
+  colorVictory: {r: 0, g: 0.60784316, b: 1, a: 1}
+  mainCamera: {fileID: 519420031}
+--- !u!114 &1369829366 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114196078995204332, guid: c968998920dbd944cb2816fc2d1043ea,
+    type: 2}
+  m_PrefabInternal: {fileID: 1103063646}
+  m_Script: {fileID: 11500000, guid: 8d387e255e7182741ae4fea81db950a5, type: 3}
+--- !u!114 &1369829367 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114472340218355456, guid: c968998920dbd944cb2816fc2d1043ea,
+    type: 2}
+  m_PrefabInternal: {fileID: 1103063646}
+  m_Script: {fileID: 11500000, guid: 6492daef0d5964f4d8eb59b1f8e8b5b5, type: 3}
 --- !u!1001 &1380786270
 Prefab:
   m_ObjectHideFlags: 0
