@@ -384,11 +384,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   level: 3
   levelSprites:
-  - {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 21300000, guid: 2f8e65b88dcb5604c8a843c9b62d86b9, type: 3}
+  - {fileID: 21300000, guid: 61b9e16989afccf4898a54fd3c731853, type: 3}
+  - {fileID: 21300000, guid: 92c8e490cb9825c46b1d97b3ccc4aa35, type: 3}
+  - {fileID: 21300000, guid: 2e6e7389acbf73b41a418b93217c5c60, type: 3}
+  - {fileID: 21300000, guid: e8511554f86aaf74ca9696e47133732a, type: 3}
   neighbourSpirits:
   - {fileID: 0}
   - {fileID: 0}
