@@ -1,0 +1,85 @@
+/*
+ * The Constants script is a critical component of the game. It stores all required
+ * values needed by the game system. Due to its nature, only one instance of this
+ * script is needed in the game.
+ * 
+ * This script is usually attached to the EventSystem object.
+ */
+
+// Required things to maintain //
+// Constants.INPUT_DIFFERENTIATION_THRESHOLD: for controlling precision of differentiating a "tap" input vs a "touch-and-hold" input.
+// Constants.NUM_SPIRIT_LEVELS: may be changed if more spirit levels are desired in the future.
+// Constants.MIN_OBJECT_POOL_QUANTITY: for controlling the size of the object pools for each Soul and Spirit object.
+// Constants.OBJECT_POOL_NAME: the name of the object-pooling Game Object that contains both SoulPool and SpiritPool components.
+//     --> This constant should match the name of the object-pooling Game Object
+// Constants.UNTAINTED/SHIELDED/TAINTED_TILE_NAME: names of the 3 different Sprite assets for tiles
+//     --> The Sprite asset names must match these names.
+// Constants.NEIGHBOUR_CHECK_DELAY: an arbitrary time-delay used to allow neighbour-list of Souls/Spirits to update before performing the merge-operation.
+// Constants.MAX_SPIRIT_LEVEL_UNBUFFED/BUFFED: adjust this in tandem with Constants.NUM_SPIRIT_LEVELS.
+// Constants.LAYER_NAME_<___>: these store the required layer names for filtered handling of collisions/raycasting.
+// Constants.MERGEABLE_OBJECTS_Z_OFFSET: a z-offset to ensure that raycasting for a vacant Tile will strike a Soul/Spirit object first if the Tile is NOT vacant.
+// Constants.COLLIDER_SCALE_OFFSET: a scaling-offset used to shrink the SpiritOf___Effect's collider so that it does not touch any Tiles beyond the effect boundary.
+//     --> Tile colliders are plus-shaped, so this offset is necessary
+//     --> Final SpiritOf___Effect collider size (Vector2)
+//         = <m, n> - <COLLIDER_SCALE_OFFSET, COLLIDER_SCALE_OFFSET>,
+//         m, n => number of tiles spanned, including central tile
+// Constants.colorActive/colorInactive: color of the sprite when it is acted/not acted on by player input.
+
+
+/*
+ * SoulPool and SpiritPool scripts are used to handle Soul/Spirit spawning and destruction.
+ *
+ * These scripts are attached to a standalone GameObject, typically named as "ObjectPool".
+ */
+// Required things to maintain //
+// SoulPool.quantity, SpiritPool.quantity (in Scene GameObject)
+//     --> Note that this should at least be greater or equal to Constants.MIN_OBJECT_POOL_QUANTITY
+// SoulPool.prefabs (in Scene GameObject)
+// SpiritPool.prefabs (in Scene GameObject)
+
+
+/*
+ * Every game level/scene requires a single TileManager object,
+ * which manages state changes to every single tile in the game level/scene
+ * (by purification, tainting, etc).
+ * This script is usually attached to the EventSystem object.
+ * 
+ * Also note that due to this requirement, the TileManager script should always
+ * be executed first, which can be configured in the Script Execution Order.
+ */
+
+// Required things to maintain //
+// TileManager script, attached to a GameObject in the scene, typically the EventSystem.
+// TileManager.tileSprites: this array contains 3 sprites, see Constants.<___>_TILE_NAME for the expected names of the sprites.
+//     --> In tandem, you need to configure this array in the TileManager prefab.
+// TileManager.InitializeTileManagerForRequiredClasses(): if any additional classes require a reference to a TileManager, do the initialization in this function.
+
+
+/*
+ * Every tile in the game level/scene shares a single TileHighlighter object.
+ * The TileHighlighter will highlight a tile that the player is currently hovering
+ * on, if it is vacant. This highlight shows whenever the player is
+ * dragging-and-dropping a Soul/Spirit around in the game level/scene.
+ * 
+ * This script is attached to a standalone GameObject, typically named as
+ * "TileHighlighter".
+ */
+
+// Required things to maintain //
+// TileHighlighter script, attached to a GameObject named as "TileHighlighter"
+
+
+/*
+ * All spirits of the same type share a single effect-applying object of the same
+ * corresponding type in the game level/scene.
+ *
+ * SpiritCourage <--> SpiritOfCourageEffect
+ * SpiritFriendship <--> SpiritOfFriendshipEffect
+ * SpiritLove <--> SpiritOfLoveEffect
+ * SpiritWisdom <--> SpiritOfWisdomEffect
+ * SpiritHarmony <--> SpiritOfHarmonyEffect
+ */
+
+// Required things to maintain //
+// SpiritOf___Effect.NAME = name of effect-applying object in game scene
+// The name typically follows as "Spirit___Effect"

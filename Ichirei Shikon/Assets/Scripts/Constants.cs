@@ -7,6 +7,7 @@ public class Constants : MonoBehaviour {
 
     // ======================================= System Configurations ======================================= //
     public const int MOUSE_BUTTON_LEFT = 0;
+    public const float INPUT_DIFFERENTIATION_THRESHOLD = .4f;
 
     public const int NUM_SOUL_OBJECTS = 4;
     public const int NUM_SPIRIT_LEVELS = 5;
@@ -40,6 +41,8 @@ public class Constants : MonoBehaviour {
     public const int MIN_SPIRIT_LEVEL = 1;
     public const int MAX_SPIRIT_LEVEL_UNBUFFED = 4;
     public const int MAX_SPIRIT_LEVEL_BUFFED = 5;
+
+    public static int[] SPIRIT_OF_LOVE_SOULS_SPAWNED_AT_LEVEL = {2, 4, 6, 8, 8};
     // ========================================================================================================== //
 
     
@@ -77,8 +80,14 @@ public class Constants : MonoBehaviour {
     /// </summary>
     public const float MERGEABLE_OBJECTS_Z_OFFSET = -1f;
 
+    /// <summary>
+    /// This constant is used to reduce the size of the spirit-effect collider so that it does not come into contact
+    /// with the neighbouring tiles beyond the effect zone.
+    /// </summary>
+    public const float COLLIDER_SCALE_OFFSET = 0.35f;
+
     // Raycasts are used for detecting the tile that an object should snap to,
-    // and should ignore these collision layers.
+    // and should only check for these collision layers.
     public static LayerMask desiredRaycastLayers;
     // ========================================================================================================== //
 
