@@ -19,8 +19,8 @@ public class TileTaint : MonoBehaviour {
 
     void OnTriggerEnter2D (Collider2D other) {
         if (parent.IsTainted) {
-            if (other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_NAME_SOUL_BOUNDS) ||
-                other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_NAME_SPIRIT_BOUNDS)) {
+            if (other.gameObject.layer == LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.SOUL_BOUNDS]) ||
+                other.gameObject.layer == LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.SPIRIT_BOUNDS])) {
                 other.gameObject.SetActive(false);
             }
         }

@@ -8,7 +8,7 @@ public class TileHighlighter : MonoBehaviour {
     SpriteRenderer spriteRenderer;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
         spriteRenderer = GetComponent<SpriteRenderer>();
         Debug.Assert(spriteRenderer != null, "SpriteRenderer component is missing for a GameObject containing the TileHighlighter script.");
 

@@ -17,35 +17,35 @@ public class Spirit : Mergeable {
     [SerializeField]
     protected Sprite[] levelSprites;
 
-    public List<Spirit> neighbourSpirits = new List<Spirit>(Constants.NUM_NEIGHBOURS);
+    public List<Spirit> neighbourSpirits = new List<Spirit>(Configurable.NUM_NEIGHBOURS);
 
     protected override void Awake () {
         base.Awake();
-        Debug.Assert(neighbourSpirits.Count == Constants.NUM_NEIGHBOURS, "List of neighbours in Spirit is of incorrect length.");
+        Debug.Assert(neighbourSpirits.Count == Configurable.NUM_NEIGHBOURS, "List of neighbours in Spirit is of incorrect length.");
         Debug.Assert(levelSprites != null, "Spirit level sprites not initialized in Spirit script.");
-        Debug.Assert(levelSprites.Length == Constants.NUM_SPIRIT_LEVELS, "Spirit level sprites array in Spirit is of incorrect length.");
+        Debug.Assert(levelSprites.Length == Configurable.instance.NUM_SPIRIT_LEVELS, "Spirit level sprites array in Spirit is of incorrect length.");
     }
 
     protected override void OnTriggerEnter2D (Collider2D other) {
-        if (other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_NAME_SPIRIT)) {
+        if (other.gameObject.layer == LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.SPIRIT])) {
             string otherCollider = other.name;
             Spirit s = other.gameObject.GetComponentInParent<Spirit>();
 
             switch (otherCollider) {
-                case Constants.COLLIDER_LEFT:
-                    neighbourSpirits[(int) Constants.ColliderIndex.RIGHT] = s;
+                case Configurable.COLLIDER_LEFT:
+                    neighbourSpirits[(int) Configurable.ColliderIndex.RIGHT] = s;
                     break;
 
-                case Constants.COLLIDER_RIGHT:
-                    neighbourSpirits[(int) Constants.ColliderIndex.LEFT] = s;
+                case Configurable.COLLIDER_RIGHT:
+                    neighbourSpirits[(int) Configurable.ColliderIndex.LEFT] = s;
                     break;
 
-                case Constants.COLLIDER_TOP:
-                    neighbourSpirits[(int) Constants.ColliderIndex.BOTTOM] = s;
+                case Configurable.COLLIDER_TOP:
+                    neighbourSpirits[(int) Configurable.ColliderIndex.BOTTOM] = s;
                     break;
 
-                case Constants.COLLIDER_BOTTOM:
-                    neighbourSpirits[(int) Constants.ColliderIndex.TOP] = s;
+                case Configurable.COLLIDER_BOTTOM:
+                    neighbourSpirits[(int) Configurable.ColliderIndex.TOP] = s;
                     break;
 
                 default:
@@ -56,7 +56,7 @@ public class Spirit : Mergeable {
     }
 
     protected override void OnTriggerExit2D (Collider2D other) {
-        if (other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_NAME_SPIRIT)) {
+        if (other.gameObject.layer == LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.SPIRIT])) {
             Spirit s = other.gameObject.GetComponentInParent<Spirit>();
             int spiritIndex = neighbourSpirits.IndexOf(s);
             if (spiritIndex != -1) {
@@ -80,7 +80,7 @@ public class Spirit : Mergeable {
 
     protected virtual IEnumerator TriggerSpiritMergeAttemptCoroutine () {
         // We introduce a delay to ensure that the list of neighbouring Spirits are updated before we check for possible merging operation.
-        yield return new WaitForSeconds(Constants.NEIGHBOUR_CHECK_DELAY);
+        yield return new WaitForSeconds(Configurable.instance.NEIGHBOUR_CHECK_DELAY);
         AttemptMerge();
 
         //yield return new WaitForSeconds(Constants.TILE_TAINT_DELAY);
@@ -115,14 +115,14 @@ public class Spirit : Mergeable {
          * If spirits are already at maximum level, they should not merge anymore ==> we have no need to do this query at all.
          * Note that level 5 spirits CANNOT be obtained from merging.
          */
-        if (requiredLevel >= Constants.MAX_SPIRIT_LEVEL_UNBUFFED) return result;
+        if (requiredLevel >= Configurable.instance.MAX_SPIRIT_LEVEL_UNBUFFED) return result;
 
         if (!result.Contains(this)) result.Add(this);
 
-        Spirit left = neighbourSpirits[(int) Constants.ColliderIndex.LEFT];
-        Spirit right = neighbourSpirits[(int) Constants.ColliderIndex.RIGHT];
-        Spirit top = neighbourSpirits[(int) Constants.ColliderIndex.TOP];
-        Spirit bottom = neighbourSpirits[(int) Constants.ColliderIndex.BOTTOM];
+        Spirit left = neighbourSpirits[(int) Configurable.ColliderIndex.LEFT];
+        Spirit right = neighbourSpirits[(int) Configurable.ColliderIndex.RIGHT];
+        Spirit top = neighbourSpirits[(int) Configurable.ColliderIndex.TOP];
+        Spirit bottom = neighbourSpirits[(int) Configurable.ColliderIndex.BOTTOM];
 
         if (left != null) {
             if (sameTypeRequired && IsSameSpirit(left, requiredType, requiredLevel)) {
@@ -193,7 +193,7 @@ public class Spirit : Mergeable {
 
         int numConnectedSoulsOfSameType = connectedSpiritsOfSameType.Count;
 
-        if (numConnectedSoulsOfSameType >= Constants.NUM_OBJECTS_FOR_MERGE) {
+        if (numConnectedSoulsOfSameType >= Configurable.instance.NUM_OBJECTS_FOR_MERGE) {
             foreach (Spirit s in connectedSpiritsOfSameType) {
                 s.gameObject.SetActive(false);
             }
@@ -206,39 +206,39 @@ public class Spirit : Mergeable {
     // TODO: Need to also make sure to increment the level of the spawned spirit.
     protected virtual void SpawnSpiritOnMerge (int connectedSoulOfSameTypeCount = 0, bool specialCaseSatisfied = false) {
         if (!specialCaseSatisfied) {
-            Debug.Assert(connectedSoulOfSameTypeCount >= Constants.NUM_OBJECTS_FOR_MERGE,
-            "Spirit-merging should not take place for less than " + Constants.NUM_OBJECTS_FOR_MERGE + " connected spirits for non-special case.");
+            Debug.Assert(connectedSoulOfSameTypeCount >= Configurable.instance.NUM_OBJECTS_FOR_MERGE,
+            "Spirit-merging should not take place for less than " + Configurable.instance.NUM_OBJECTS_FOR_MERGE + " connected spirits for non-special case.");
         }
         
         if (specialCaseSatisfied) {
             // Spawn a Spirit of Harmony
             Debug.Log("Spawning a Spirit of Harmony.");
-            Constants.spiritPool.SpawnSpirit(Spirit.SpiritType.HARMONY, this.level + 1, this.transform.position);
+            Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.HARMONY, this.level + 1, this.transform.position);
         } else {
             // TODO: create/"create" the corresponding Spirit GameObject at current position.
             switch (spiritType) {
                 case SpiritType.COURAGE:
                     // Spawn a Spirit of Courage
                     Debug.Log("Spawning a Spirit of Courage.");
-                    Constants.spiritPool.SpawnSpirit(Spirit.SpiritType.COURAGE, this.level + 1, this.transform.position);
+                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.COURAGE, this.level + 1, this.transform.position);
                     break;
 
                 case SpiritType.FRIENDSHIP:
                     // Spawn a Spirit of Friendship
                     Debug.Log("Spawning a Spirit of Friendship.");
-                    Constants.spiritPool.SpawnSpirit(Spirit.SpiritType.FRIENDSHIP, this.level + 1, this.transform.position);
+                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.FRIENDSHIP, this.level + 1, this.transform.position);
                     break;
 
                 case SpiritType.LOVE:
                     // Spawn a Spirit of Love
                     Debug.Log("Spawning a Spirit of Love.");
-                    Constants.spiritPool.SpawnSpirit(Spirit.SpiritType.LOVE, this.level + 1, this.transform.position);
+                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.LOVE, this.level + 1, this.transform.position);
                     break;
 
                 case SpiritType.WISDOM:
                     // Spawn a Spirit of Wisdom
                     Debug.Log("Spawning a Spirit of Wisdom.");
-                    Constants.spiritPool.SpawnSpirit(Spirit.SpiritType.WISDOM, this.level + 1, this.transform.position);
+                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.WISDOM, this.level + 1, this.transform.position);
                     break;
 
                 default:
@@ -253,14 +253,14 @@ public class Spirit : Mergeable {
          * Spirit of Friendship/Harmony levels are capped at MAX_SPIRIT_LEVEL_UNBUFFED (currently at 4).
          * Reason for doing this is to prevent possibly-infinite level-buffing exploitation.
          */
-        if (this.level == Constants.MAX_SPIRIT_LEVEL_UNBUFFED &&
+        if (this.level == Configurable.instance.MAX_SPIRIT_LEVEL_UNBUFFED &&
             Equals(this.spiritType, SpiritType.FRIENDSHIP) || Equals(this.spiritType, SpiritType.HARMONY)) {
             return;
         }
 
-        if (hasReceivedSpecialBuff && this.level < Constants.MAX_SPIRIT_LEVEL_BUFFED) {
+        if (hasReceivedSpecialBuff && this.level < Configurable.instance.MAX_SPIRIT_LEVEL_BUFFED) {
             UpdateSpiritLevel();
-        } else if (this.level < Constants.MAX_SPIRIT_LEVEL_UNBUFFED) {
+        } else if (this.level < Configurable.instance.MAX_SPIRIT_LEVEL_UNBUFFED) {
             UpdateSpiritLevel();
         }
     }

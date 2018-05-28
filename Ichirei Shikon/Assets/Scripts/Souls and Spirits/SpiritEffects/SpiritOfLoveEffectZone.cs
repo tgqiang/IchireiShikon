@@ -22,20 +22,20 @@ public class SpiritOfLoveEffectZone : MonoBehaviour {
         parent = GetComponent<SpiritOfLoveEffect>();
         Debug.Assert(parent != null, "Missing SpiritOfLoveEffect parent component in SpiritOfLoveEffectZone game object.");
 
-        Debug.Assert(zoneIndex >= 0 && zoneIndex < Constants.SPIRIT_OF_LOVE_SOULS_SPAWNED_AT_LEVEL[Constants.MAX_SPIRIT_LEVEL_BUFFED], "Incorrect zone index for SpiritOfLoveEffectZone.");
+        Debug.Assert(zoneIndex >= 0 && zoneIndex < Configurable.instance.SPIRIT_OF_LOVE_SOULS_SPAWNED_AT_LEVEL[Configurable.instance.MAX_SPIRIT_LEVEL_BUFFED], "Incorrect zone index for SpiritOfLoveEffectZone.");
 	}
 
     void OnTriggerEnter2D (Collider2D other) {
-        if ((Equals(other.gameObject.layer, LayerMask.NameToLayer(Constants.LAYER_NAME_SOUL_BOUNDS)) ||
-             Equals(other.gameObject.layer, LayerMask.NameToLayer(Constants.LAYER_NAME_SPIRIT_BOUNDS)))) {
+        if ((Equals(other.gameObject.layer, LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.SOUL_BOUNDS])) ||
+             Equals(other.gameObject.layer, LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.SPIRIT_BOUNDS])))) {
             parent.isZoneOccupied[zoneIndex] = true;
             spriteRenderer.color = ineffectiveColor;
         }
     }
 
     void OnTriggerExit2D (Collider2D other) {
-        if ((Equals(other.gameObject.layer, LayerMask.NameToLayer(Constants.LAYER_NAME_SOUL_BOUNDS)) ||
-             Equals(other.gameObject.layer, LayerMask.NameToLayer(Constants.LAYER_NAME_SPIRIT_BOUNDS)))) {
+        if ((Equals(other.gameObject.layer, LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.SOUL_BOUNDS])) ||
+             Equals(other.gameObject.layer, LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.SPIRIT_BOUNDS])))) {
             parent.isZoneOccupied[zoneIndex] = false;
             spriteRenderer.color = effectiveColor;
         }

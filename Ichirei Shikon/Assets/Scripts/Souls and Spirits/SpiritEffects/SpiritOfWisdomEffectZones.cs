@@ -16,7 +16,7 @@ public class SpiritOfWisdomEffectZones : MonoBehaviour {
     void OnTriggerEnter2D (Collider2D other) {
         Tile t = other.gameObject.GetComponentInParent<Tile>();
 
-        if (t != null && Equals(t.gameObject.layer, LayerMask.NameToLayer(Constants.LAYER_NAME_TILE))) {
+        if (t != null && Equals(t.gameObject.layer, LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.TILE]))) {
             if (!parent.tilesToPurify.Contains(t)) {
                 parent.tilesToPurify.Add(t);
             }

@@ -18,7 +18,7 @@ public class ObjectPool : MonoBehaviour {
 	}
 
     protected virtual void AssertRequiredConditions () {
-        Debug.Assert(quantity >= Constants.MIN_OBJECT_POOL_QUANTITY, "Likely insufficient quantity specified for ObjectPool, currently set at " + Constants.MIN_OBJECT_POOL_QUANTITY);
+        Debug.Assert(quantity >= Configurable.instance.MIN_OBJECT_POOL_QUANTITY, "Likely insufficient quantity specified for ObjectPool, currently set at " + Configurable.instance.MIN_OBJECT_POOL_QUANTITY);
         Debug.Assert(prefabs != null, "Required prefabs for ObjectPool script not initialized.");
         Debug.Assert(prefabs.Length > 0, "Prefabs for ObjectPool script not assigned for performing object-pooling.");
     }

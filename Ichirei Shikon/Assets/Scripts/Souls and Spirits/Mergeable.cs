@@ -48,17 +48,17 @@ public class Mergeable : MonoBehaviour {
 	
 	// Update is called once per frame
 	protected virtual void Update () {
-        if (Input.GetMouseButtonDown(Constants.MOUSE_BUTTON_LEFT)) {
+        if (Input.GetMouseButtonDown(Configurable.MOUSE_BUTTON_LEFT)) {
             // we only want to allow the object, that was clicked on by the player, to be movable.
             isActive = IsClickedOn(Input.mousePosition);
         }
 
-        if (Input.GetMouseButton(Constants.MOUSE_BUTTON_LEFT)) {
+        if (Input.GetMouseButton(Configurable.MOUSE_BUTTON_LEFT)) {
             timeSinceInput += Time.deltaTime;
             OnGrab();
         }
 
-        if (Input.GetMouseButtonUp(Constants.MOUSE_BUTTON_LEFT)) {
+        if (Input.GetMouseButtonUp(Configurable.MOUSE_BUTTON_LEFT)) {
             OnRelease();
         }
     }
@@ -72,7 +72,7 @@ public class Mergeable : MonoBehaviour {
     }
 
     protected virtual bool IsClickedOn (Vector3 mousePosition) {
-        Vector3 pointInWorldSpace = Constants.mainCamera.ScreenToWorldPoint(mousePosition);
+        Vector3 pointInWorldSpace = Configurable.instance.mainCamera.ScreenToWorldPoint(mousePosition);
         return GetComponent<BoxCollider2D>().OverlapPoint(new Vector2(pointInWorldSpace.x, pointInWorldSpace.y));
     }
 
@@ -83,18 +83,18 @@ public class Mergeable : MonoBehaviour {
     }
 
     protected virtual void HighlightCurrentTileSpot () {
-        Vector3 worldPoint = Constants.mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 worldPoint = Configurable.instance.mainCamera.ScreenToWorldPoint(Input.mousePosition);
         // TODO: adjust this for mobile version.
-        RaycastHit2D hit = Physics2D.Raycast(new Vector2(worldPoint.x, worldPoint.y), Vector2.zero, Mathf.Infinity, Constants.desiredRaycastLayers);
+        RaycastHit2D hit = Physics2D.Raycast(new Vector2(worldPoint.x, worldPoint.y), Vector2.zero, Mathf.Infinity, Configurable.instance.desiredRaycastLayers);
 
         // If raycast hits a collider with a Tile component, that Tile is unoccupied.
         if (hit) {
-            if (hit.collider.name == Constants.LAYER_NAME_TILE_BOUNDS || hit.collider == colliderSelf) {
+            if (hit.collider.name == Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.TILE_BOUNDS] || hit.collider == colliderSelf) {
                 tileHighlighter.Highlight(hit.transform.position);
                 nearestTilePosition = hit.transform.position;
             }
         }
-        spriteRenderer.color = Constants.colorActive;
+        spriteRenderer.color = Configurable.instance.colorActive;
     }
 
     protected virtual void OnRelease () {
@@ -113,7 +113,7 @@ public class Mergeable : MonoBehaviour {
     }
 
     protected virtual void CheckPlayerInputType () {
-        if (timeSinceInput <= Constants.INPUT_DIFFERENTIATION_THRESHOLD) {
+        if (timeSinceInput <= Configurable.instance.INPUT_DIFFERENTIATION_THRESHOLD) {
             Debug.Log("Tap registered.");
         } else {
             Debug.Log("Touch-and-drag registered.");
@@ -126,7 +126,7 @@ public class Mergeable : MonoBehaviour {
     }
 
     protected virtual void DisplaceObject () {
-        nearestTilePosition.z = Constants.MERGEABLE_OBJECTS_Z_OFFSET;
+        nearestTilePosition.z = Configurable.instance.MERGEABLE_OBJECTS_Z_OFFSET;
         prevPosition = nearestTilePosition;
     }
 
@@ -134,7 +134,7 @@ public class Mergeable : MonoBehaviour {
         isActive = false;
 
         gameObject.transform.position = prevPosition;
-        spriteRenderer.color = Constants.colorInactive;
+        spriteRenderer.color = Configurable.instance.colorInactive;
         tileHighlighter.Unhighlight();
 
         timeSinceInput = 0f;

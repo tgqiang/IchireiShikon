@@ -5,7 +5,6 @@ using UnityEngine.Assertions;
 
 public class SpiritOfFriendshipEffect : MonoBehaviour {
 
-    public const string NAME = "SpiritFriendshipEffect";
     SpriteRenderer spriteRenderer;
     BoxCollider2D boxCollider;
 
@@ -25,7 +24,7 @@ public class SpiritOfFriendshipEffect : MonoBehaviour {
         transform.position = targetPosition;
         // Vector2 effectSize = (level * 2 + 1) * Vector2.one;
         Vector2 effectSize = 3 * Vector2.one;       // AoE for Spirit of Friendship's buff effect is fixed.
-        boxCollider.size = effectSize - Constants.COLLIDER_SCALE_OFFSET * Vector2.one;
+        boxCollider.size = effectSize - Configurable.instance.COLLIDER_SCALE_OFFSET * Vector2.one;
         spriteRenderer.size = effectSize;
         spriteRenderer.enabled = true;
     }
@@ -50,13 +49,13 @@ public class SpiritOfFriendshipEffect : MonoBehaviour {
         Tile t = other.gameObject.GetComponentInParent<Tile>();
         Spirit s = other.gameObject.GetComponentInParent<Spirit>();
 
-        if (t != null && Equals(t.gameObject.layer, LayerMask.NameToLayer(Constants.LAYER_NAME_TILE))) {
+        if (t != null && Equals(t.gameObject.layer, LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.TILE]))) {
             if (!tilesToPurify.Contains(t)) {
                 tilesToPurify.Add(t);
             }
         }
 
-        if (s != null && Equals(s.gameObject.layer, LayerMask.NameToLayer(Constants.LAYER_NAME_SPIRIT_BOUNDS))) {
+        if (s != null && Equals(s.gameObject.layer, LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.SPIRIT_BOUNDS]))) {
             if (!spiritsToBuff.Contains(s)) {
                 spiritsToBuff.Add(s);
             }

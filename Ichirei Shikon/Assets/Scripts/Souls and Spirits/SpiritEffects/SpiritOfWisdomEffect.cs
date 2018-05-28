@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SpiritOfWisdomEffect : MonoBehaviour {
 
-    public const string NAME = "SpiritWisdomEffect";
     public const int NUM_ZONES = 2;
 
     enum ZoneIndices {
@@ -35,8 +34,8 @@ public class SpiritOfWisdomEffect : MonoBehaviour {
 
         horizontalSize.x = level * 2 - 1;
         verticalSize.y = level * 2 - 1;
-        boxColliders[(int) ZoneIndices.HORIZONTAL].size = horizontalSize - Constants.COLLIDER_SCALE_OFFSET * Vector2.one;
-        boxColliders[(int) ZoneIndices.VERTICAL].size = verticalSize - Constants.COLLIDER_SCALE_OFFSET * Vector2.one;
+        boxColliders[(int) ZoneIndices.HORIZONTAL].size = horizontalSize - Configurable.instance.COLLIDER_SCALE_OFFSET * Vector2.one;
+        boxColliders[(int) ZoneIndices.VERTICAL].size = verticalSize - Configurable.instance.COLLIDER_SCALE_OFFSET * Vector2.one;
 
         spriteRenderers[(int) ZoneIndices.HORIZONTAL].size = horizontalSize;
         spriteRenderers[(int) ZoneIndices.VERTICAL].size = verticalSize;

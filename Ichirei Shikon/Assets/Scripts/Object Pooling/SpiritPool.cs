@@ -36,12 +36,12 @@ public class SpiritPool : ObjectPool {
         List<List<GameObject>> spiritWisdomObjects = new List<List<GameObject>>();
         List<List<GameObject>> spiritHarmonyObjects = new List<List<GameObject>>();
 
-        for (int i = 0; i < Constants.NUM_SPIRIT_LEVELS; i++) {
-            GameObject spiritCourageObj = prefabs[(int) Spirit.SpiritType.COURAGE * Constants.NUM_SPIRIT_LEVELS + i];
-            GameObject spiritFriendshipObj = prefabs[(int) Spirit.SpiritType.FRIENDSHIP * Constants.NUM_SPIRIT_LEVELS + i];
-            GameObject spiritLoveObj = prefabs[(int) Spirit.SpiritType.LOVE * Constants.NUM_SPIRIT_LEVELS + i];
-            GameObject spiritWisdomObj = prefabs[(int) Spirit.SpiritType.WISDOM * Constants.NUM_SPIRIT_LEVELS + i];
-            GameObject spiritHarmonyObj = prefabs[(int) Spirit.SpiritType.HARMONY * Constants.NUM_SPIRIT_LEVELS + i];
+        for (int i = 0; i < Configurable.instance.NUM_SPIRIT_LEVELS; i++) {
+            GameObject spiritCourageObj = prefabs[(int) Spirit.SpiritType.COURAGE * Configurable.instance.NUM_SPIRIT_LEVELS + i];
+            GameObject spiritFriendshipObj = prefabs[(int) Spirit.SpiritType.FRIENDSHIP * Configurable.instance.NUM_SPIRIT_LEVELS + i];
+            GameObject spiritLoveObj = prefabs[(int) Spirit.SpiritType.LOVE * Configurable.instance.NUM_SPIRIT_LEVELS + i];
+            GameObject spiritWisdomObj = prefabs[(int) Spirit.SpiritType.WISDOM * Configurable.instance.NUM_SPIRIT_LEVELS + i];
+            GameObject spiritHarmonyObj = prefabs[(int) Spirit.SpiritType.HARMONY * Configurable.instance.NUM_SPIRIT_LEVELS + i];
 
             List<GameObject> spiritCourageObjList = new List<GameObject>();
             List<GameObject> spiritFriendshipObjList = new List<GameObject>();
@@ -87,7 +87,7 @@ public class SpiritPool : ObjectPool {
 
     protected GameObject RetrieveSpirit (Spirit.SpiritType requiredType, int requiredLevel) {
         Debug.Assert(!Equals(requiredType, Spirit.SpiritType.NONE), "Invalid SpiritType requested for in SpiritPool.");
-        Debug.Assert(requiredLevel > 0 && requiredLevel <= Constants.NUM_SPIRIT_LEVELS, "Invalid Spirit level requested for in SpiritPool");
+        Debug.Assert(requiredLevel > 0 && requiredLevel <= Configurable.instance.NUM_SPIRIT_LEVELS, "Invalid Spirit level requested for in SpiritPool");
         
         if (Equals(requiredType, Spirit.SpiritType.NONE)) {
             Debug.LogException(new System.Exception("Invalid SpiritType encountered in RetrieveSpirit() in SpiritPool."));
@@ -99,7 +99,7 @@ public class SpiritPool : ObjectPool {
 
     protected GameObject RetrieveSpirit (int requiredType, int requiredLevel) {
         Debug.Assert(requiredType < (int) Spirit.SpiritType.NONE, "Invalid integer 'requiredType' received in RetrieveSpirit for SpiritPool.");
-        Debug.Assert(requiredLevel > 0 && requiredLevel <= Constants.NUM_SPIRIT_LEVELS, "Invalid Spirit level requested for in SpiritPool");
+        Debug.Assert(requiredLevel > 0 && requiredLevel <= Configurable.instance.NUM_SPIRIT_LEVELS, "Invalid Spirit level requested for in SpiritPool");
 
         int index = requiredLevel - 1;
 
@@ -152,19 +152,19 @@ public class SpiritPool : ObjectPool {
         base.AssertRequiredConditions();
 
         // # of Spirit prefabs needed = NUM_SPIRIT_TYPES * NUM_SPIRIT_LEVELS
-        Debug.Assert(prefabs.Length == (Constants.NUM_SPIRIT_TYPES * Constants.NUM_SPIRIT_LEVELS), "Incorrect number of prefabs detected in SpiritPool.");
+        Debug.Assert(prefabs.Length == (Configurable.NUM_SPIRIT_TYPES * Configurable.instance.NUM_SPIRIT_LEVELS), "Incorrect number of prefabs detected in SpiritPool.");
 
-        for (int i = 0; i < Constants.NUM_SPIRIT_LEVELS; i++) {
-            Debug.Assert(prefabs[(int) Spirit.SpiritType.COURAGE * Constants.NUM_SPIRIT_LEVELS + i].GetComponent<SpiritCourage>() != null, "SpiritOfCourage prefab should be in indices [0 ~ 4].");
-            Debug.Assert(prefabs[(int) Spirit.SpiritType.COURAGE * Constants.NUM_SPIRIT_LEVELS + i].GetComponent<SpiritCourage>().Level == (i + 1), "Level of SpiritOfCourage prefab at index [" + (int) Spirit.SpiritType.COURAGE * Constants.NUM_SPIRIT_LEVELS + i + "] is incorrect.");
-            Debug.Assert(prefabs[(int) Spirit.SpiritType.FRIENDSHIP * Constants.NUM_SPIRIT_LEVELS + i].GetComponent<SpiritFriendship>() != null, "SpiritOfFriendship prefab should be in indices [5 ~ 9].");
-            Debug.Assert(prefabs[(int) Spirit.SpiritType.FRIENDSHIP * Constants.NUM_SPIRIT_LEVELS + i].GetComponent<SpiritFriendship>().Level == (i + 1), "Level of SpiritOfFriendship prefab at index [" + (int) Spirit.SpiritType.FRIENDSHIP * Constants.NUM_SPIRIT_LEVELS + i + "] is incorrect.");
-            Debug.Assert(prefabs[(int) Spirit.SpiritType.LOVE * Constants.NUM_SPIRIT_LEVELS + i].GetComponent<SpiritLove>() != null, "SpiritOfLove prefab should be in indices [11 ~ 14].");
-            Debug.Assert(prefabs[(int) Spirit.SpiritType.LOVE * Constants.NUM_SPIRIT_LEVELS + i].GetComponent<SpiritLove>().Level == (i + 1), "Level of SpiritOfLove prefab at index [" + (int) Spirit.SpiritType.LOVE * Constants.NUM_SPIRIT_LEVELS + i + "] is incorrect.");
-            Debug.Assert(prefabs[(int) Spirit.SpiritType.WISDOM * Constants.NUM_SPIRIT_LEVELS + i].GetComponent<SpiritWisdom>() != null, "SpiritOfWisdom prefab should be in indices [15 ~ 19].");
-            Debug.Assert(prefabs[(int) Spirit.SpiritType.WISDOM * Constants.NUM_SPIRIT_LEVELS + i].GetComponent<SpiritWisdom>().Level == (i + 1), "Level of SpiritOfWisdom prefab at index [" + (int) Spirit.SpiritType.WISDOM * Constants.NUM_SPIRIT_LEVELS + i + "] is incorrect.");
-            Debug.Assert(prefabs[(int) Spirit.SpiritType.HARMONY * Constants.NUM_SPIRIT_LEVELS + i].GetComponent<SpiritHarmony>() != null, "SpiritOfHarmony prefab should be in indices [20 ~ 24].");
-            Debug.Assert(prefabs[(int) Spirit.SpiritType.HARMONY * Constants.NUM_SPIRIT_LEVELS + i].GetComponent<SpiritHarmony>().Level == (i + 1), "Level of SpiritOfHarmony prefab at index [" + (int) Spirit.SpiritType.HARMONY * Constants.NUM_SPIRIT_LEVELS + i + "] is incorrect.");
+        for (int i = 0; i < Configurable.instance.NUM_SPIRIT_LEVELS; i++) {
+            Debug.Assert(prefabs[(int) Spirit.SpiritType.COURAGE * Configurable.instance.NUM_SPIRIT_LEVELS + i].GetComponent<SpiritCourage>() != null, "SpiritOfCourage prefab should be in indices [0 ~ 4].");
+            Debug.Assert(prefabs[(int) Spirit.SpiritType.COURAGE * Configurable.instance.NUM_SPIRIT_LEVELS + i].GetComponent<SpiritCourage>().Level == (i + 1), "Level of SpiritOfCourage prefab at index [" + (int) Spirit.SpiritType.COURAGE * Configurable.instance.NUM_SPIRIT_LEVELS + i + "] is incorrect.");
+            Debug.Assert(prefabs[(int) Spirit.SpiritType.FRIENDSHIP * Configurable.instance.NUM_SPIRIT_LEVELS + i].GetComponent<SpiritFriendship>() != null, "SpiritOfFriendship prefab should be in indices [5 ~ 9].");
+            Debug.Assert(prefabs[(int) Spirit.SpiritType.FRIENDSHIP * Configurable.instance.NUM_SPIRIT_LEVELS + i].GetComponent<SpiritFriendship>().Level == (i + 1), "Level of SpiritOfFriendship prefab at index [" + (int) Spirit.SpiritType.FRIENDSHIP * Configurable.instance.NUM_SPIRIT_LEVELS + i + "] is incorrect.");
+            Debug.Assert(prefabs[(int) Spirit.SpiritType.LOVE * Configurable.instance.NUM_SPIRIT_LEVELS + i].GetComponent<SpiritLove>() != null, "SpiritOfLove prefab should be in indices [11 ~ 14].");
+            Debug.Assert(prefabs[(int) Spirit.SpiritType.LOVE * Configurable.instance.NUM_SPIRIT_LEVELS + i].GetComponent<SpiritLove>().Level == (i + 1), "Level of SpiritOfLove prefab at index [" + (int) Spirit.SpiritType.LOVE * Configurable.instance.NUM_SPIRIT_LEVELS + i + "] is incorrect.");
+            Debug.Assert(prefabs[(int) Spirit.SpiritType.WISDOM * Configurable.instance.NUM_SPIRIT_LEVELS + i].GetComponent<SpiritWisdom>() != null, "SpiritOfWisdom prefab should be in indices [15 ~ 19].");
+            Debug.Assert(prefabs[(int) Spirit.SpiritType.WISDOM * Configurable.instance.NUM_SPIRIT_LEVELS + i].GetComponent<SpiritWisdom>().Level == (i + 1), "Level of SpiritOfWisdom prefab at index [" + (int) Spirit.SpiritType.WISDOM * Configurable.instance.NUM_SPIRIT_LEVELS + i + "] is incorrect.");
+            Debug.Assert(prefabs[(int) Spirit.SpiritType.HARMONY * Configurable.instance.NUM_SPIRIT_LEVELS + i].GetComponent<SpiritHarmony>() != null, "SpiritOfHarmony prefab should be in indices [20 ~ 24].");
+            Debug.Assert(prefabs[(int) Spirit.SpiritType.HARMONY * Configurable.instance.NUM_SPIRIT_LEVELS + i].GetComponent<SpiritHarmony>().Level == (i + 1), "Level of SpiritOfHarmony prefab at index [" + (int) Spirit.SpiritType.HARMONY * Configurable.instance.NUM_SPIRIT_LEVELS + i + "] is incorrect.");
         }
     }
 }

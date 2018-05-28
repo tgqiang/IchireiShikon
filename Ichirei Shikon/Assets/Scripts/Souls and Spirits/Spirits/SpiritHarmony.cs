@@ -10,25 +10,25 @@ public class SpiritHarmony : Spirit {
         base.Awake();
         spiritType = SpiritType.HARMONY;
 
-        spiritHarmonyEffect = GameObject.Find(SpiritOfHarmonyEffect.NAME).GetComponent<SpiritOfHarmonyEffect>();
+        spiritHarmonyEffect = FindObjectOfType<SpiritOfHarmonyEffect>();
         Debug.Assert(spiritHarmonyEffect != null, "SpiritOfHarmonyEffect GameObject/Component is missing. Also check if SpiritOfHarmonyEffect.NAME attribute matches the spirit effect game object.");
     }
 
     protected override void HighlightCurrentTileSpot () {
-        Vector3 worldPoint = Constants.mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        Vector3 worldPoint = Configurable.instance.mainCamera.ScreenToWorldPoint(Input.mousePosition);
         // TODO: adjust this for mobile version.
-        RaycastHit2D hit = Physics2D.Raycast(new Vector2(worldPoint.x, worldPoint.y), Vector2.zero, Mathf.Infinity, Constants.desiredRaycastLayers);
+        RaycastHit2D hit = Physics2D.Raycast(new Vector2(worldPoint.x, worldPoint.y), Vector2.zero, Mathf.Infinity, Configurable.instance.desiredRaycastLayers);
 
         // If raycast hits a collider with a Tile component, that Tile is unoccupied.
         if (hit) {
-            if (hit.collider.name == Constants.LAYER_NAME_TILE_BOUNDS || hit.collider == colliderSelf) {
+            if (hit.collider.name == Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.TILE_BOUNDS] || hit.collider == colliderSelf) {
                 tileHighlighter.Highlight(hit.transform.position);
                 spiritHarmonyEffect.Highlight(hit.transform.position, this.level);
                 nearestTilePosition = hit.transform.position;
             }
         }
 
-        spriteRenderer.color = Constants.colorActive;
+        spriteRenderer.color = Configurable.instance.colorActive;
     }
 
     protected override void OnRelease () {
@@ -36,7 +36,7 @@ public class SpiritHarmony : Spirit {
 
         spiritHarmonyEffect.Unhighlight();
 
-        if (timeSinceInput <= Constants.INPUT_DIFFERENTIATION_THRESHOLD) {
+        if (timeSinceInput <= Configurable.instance.INPUT_DIFFERENTIATION_THRESHOLD) {
             TriggerEffect();
         }
 

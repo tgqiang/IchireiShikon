@@ -36,7 +36,7 @@ public class Tile : MonoBehaviour {
     }
 
     /// <summary> Refers to the neighbouring left, right, top and bottom tiles of this tile. </summary> ///
-    List<Tile> neighbours = new List<Tile>(Constants.NUM_NEIGHBOURS);
+    List<Tile> neighbours = new List<Tile>(Configurable.NUM_NEIGHBOURS);
 
 
     void Start () {
@@ -46,7 +46,7 @@ public class Tile : MonoBehaviour {
 
     void OnTriggerEnter2D (Collider2D other) {
         Tile t = other.gameObject.GetComponent<Tile>();
-        if (other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_NAME_TILE) && !neighbours.Contains(t)) {
+        if (other.gameObject.layer == LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.TILE]) && !neighbours.Contains(t)) {
             neighbours.Add(t);
         }
     }
@@ -115,15 +115,15 @@ public class Tile : MonoBehaviour {
         Debug.Assert(tileSprites[index] != null, "tileSprite[" + index + "] is missing.");
         switch (index) {
             case (int) SpriteIndices.UNTAINTED:
-                Debug.Assert(tileSprites[index].name == Constants.UNTAINTED_TILE_NAME, "tileSprites[" + index + "] does not match required sprite.");
+                Debug.Assert(tileSprites[index].name == Configurable.instance.UNTAINTED_TILE_NAME, "tileSprites[" + index + "] does not match required sprite.");
                 break;
 
             case (int) SpriteIndices.SHIELDED:
-                Debug.Assert(tileSprites[index].name == Constants.SHIELDED_TILE_NAME, "tileSprites[" + index + "] does not match required sprite.");
+                Debug.Assert(tileSprites[index].name == Configurable.instance.SHIELDED_TILE_NAME, "tileSprites[" + index + "] does not match required sprite.");
                 break;
 
             case (int) SpriteIndices.TAINTED:
-                Debug.Assert(tileSprites[index].name == Constants.TAINTED_TILE_NAME, "tileSprites[" + index + "] does not match required sprite.");
+                Debug.Assert(tileSprites[index].name == Configurable.instance.TAINTED_TILE_NAME, "tileSprites[" + index + "] does not match required sprite.");
                 break;
 
             default:

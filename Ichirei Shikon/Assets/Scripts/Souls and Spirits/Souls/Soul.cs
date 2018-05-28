@@ -10,34 +10,34 @@ public class Soul : Mergeable {
     }
     protected SoulType soulType;
 
-    public List<Soul> neighbourSouls = new List<Soul>(Constants.NUM_NEIGHBOURS);
+    public List<Soul> neighbourSouls = new List<Soul>(Configurable.NUM_NEIGHBOURS);
 
 
     protected override void Awake () {
         base.Awake();
-        Debug.Assert(neighbourSouls.Count == Constants.NUM_NEIGHBOURS, "List of neighbours in Soul is of incorrect length.");
+        Debug.Assert(neighbourSouls.Count == Configurable.NUM_NEIGHBOURS, "List of neighbours in Soul is of incorrect length.");
     }
 
     protected override void OnTriggerEnter2D (Collider2D other) {
-        if (other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_NAME_SOUL)) {
+        if (other.gameObject.layer == LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.SOUL])) {
             string otherCollider = other.name;
             Soul s = other.gameObject.GetComponentInParent<Soul>();
 
             switch (otherCollider) {
-                case Constants.COLLIDER_LEFT:
-                    neighbourSouls[(int) Constants.ColliderIndex.RIGHT] = s;
+                case Configurable.COLLIDER_LEFT:
+                    neighbourSouls[(int) Configurable.ColliderIndex.RIGHT] = s;
                     break;
 
-                case Constants.COLLIDER_RIGHT:
-                    neighbourSouls[(int) Constants.ColliderIndex.LEFT] = s;
+                case Configurable.COLLIDER_RIGHT:
+                    neighbourSouls[(int) Configurable.ColliderIndex.LEFT] = s;
                     break;
 
-                case Constants.COLLIDER_TOP:
-                    neighbourSouls[(int) Constants.ColliderIndex.BOTTOM] = s;
+                case Configurable.COLLIDER_TOP:
+                    neighbourSouls[(int) Configurable.ColliderIndex.BOTTOM] = s;
                     break;
 
-                case Constants.COLLIDER_BOTTOM:
-                    neighbourSouls[(int) Constants.ColliderIndex.TOP] = s;
+                case Configurable.COLLIDER_BOTTOM:
+                    neighbourSouls[(int) Configurable.ColliderIndex.TOP] = s;
                     break;
 
                 default:
@@ -48,7 +48,7 @@ public class Soul : Mergeable {
     }
 
     protected override void OnTriggerExit2D (Collider2D other) {
-        if (other.gameObject.layer == LayerMask.NameToLayer(Constants.LAYER_NAME_SOUL)) {
+        if (other.gameObject.layer == LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.SOUL])) {
             Soul s = other.gameObject.GetComponentInParent<Soul>();
             int soulIndex = neighbourSouls.IndexOf(s);
             if (soulIndex != -1) {
@@ -70,7 +70,7 @@ public class Soul : Mergeable {
 
     protected virtual IEnumerator TriggerSoulMergeAttemptCoroutine () {
         // We introduce a delay to ensure that the list of neighbouring Souls are updated before we check for possible merging operation.
-        yield return new WaitForSeconds(Constants.NEIGHBOUR_CHECK_DELAY);
+        yield return new WaitForSeconds(Configurable.instance.NEIGHBOUR_CHECK_DELAY);
         AttemptMerge();
         tileManager.TakeMove();     // TODO: investigate why putting this call as another coroutine does not trigger this call.
     }
@@ -85,10 +85,10 @@ public class Soul : Mergeable {
 
         if (!result.Contains(this)) result.Add(this);
 
-        Soul left = neighbourSouls[(int) Constants.ColliderIndex.LEFT];
-        Soul right = neighbourSouls[(int) Constants.ColliderIndex.RIGHT];
-        Soul top = neighbourSouls[(int) Constants.ColliderIndex.TOP];
-        Soul bottom = neighbourSouls[(int) Constants.ColliderIndex.BOTTOM];
+        Soul left = neighbourSouls[(int) Configurable.ColliderIndex.LEFT];
+        Soul right = neighbourSouls[(int) Configurable.ColliderIndex.RIGHT];
+        Soul top = neighbourSouls[(int) Configurable.ColliderIndex.TOP];
+        Soul bottom = neighbourSouls[(int) Configurable.ColliderIndex.BOTTOM];
 
         if (left != null) {
             if (sameTypeRequired && Equals(left.soulType, requiredType)) {
@@ -153,7 +153,7 @@ public class Soul : Mergeable {
 
         int numConnectedSoulsOfSameType = connectedSoulsOfSameType.Count;
 
-        if (numConnectedSoulsOfSameType >= Constants.NUM_OBJECTS_FOR_MERGE) {
+        if (numConnectedSoulsOfSameType >= Configurable.instance.NUM_OBJECTS_FOR_MERGE) {
             foreach (Soul s in connectedSoulsOfSameType) {
                 s.gameObject.SetActive(false);
             }
@@ -164,38 +164,38 @@ public class Soul : Mergeable {
 
     protected virtual void SpawnSpiritOnMerge (int connectedSoulOfSameTypeCount = 0, bool specialCaseSatisfied = false) {
         if (!specialCaseSatisfied) {
-            Debug.Assert(connectedSoulOfSameTypeCount >= Constants.NUM_OBJECTS_FOR_MERGE,
-            "Soul-merging should not take place for less than " + Constants.NUM_OBJECTS_FOR_MERGE + " connected souls for non-special case.");
+            Debug.Assert(connectedSoulOfSameTypeCount >= Configurable.instance.NUM_OBJECTS_FOR_MERGE,
+            "Soul-merging should not take place for less than " + Configurable.instance.NUM_OBJECTS_FOR_MERGE + " connected souls for non-special case.");
         }
 
         if (specialCaseSatisfied) {
             // Spawn a Spirit of Harmony
             Debug.Log("Spawning a Spirit of Harmony.");
-            Constants.spiritPool.SpawnSpirit(Spirit.SpiritType.HARMONY, 1, this.transform.position);
+            Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.HARMONY, 1, this.transform.position);
         } else {
             switch (soulType) {
                 case SoulType.ARAMITAMA:
                     // Spawn a Spirit of Courage
                     Debug.Log("Spawning a Spirit of Courage.");
-                    Constants.spiritPool.SpawnSpirit(Spirit.SpiritType.COURAGE, 1, this.transform.position);
+                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.COURAGE, 1, this.transform.position);
                     break;
 
                 case SoulType.NIGIMITAMA:
                     // Spawn a Spirit of Friendship
                     Debug.Log("Spawning a Spirit of Friendship.");
-                    Constants.spiritPool.SpawnSpirit(Spirit.SpiritType.FRIENDSHIP, 1, this.transform.position);
+                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.FRIENDSHIP, 1, this.transform.position);
                     break;
 
                 case SoulType.SAKIMITAMA:
                     // Spawn a Spirit of Love
                     Debug.Log("Spawning a Spirit of Love.");
-                    Constants.spiritPool.SpawnSpirit(Spirit.SpiritType.LOVE, 1, this.transform.position);
+                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.LOVE, 1, this.transform.position);
                     break;
 
                 case SoulType.KUSHIMITAMA:
                     // Spawn a Spirit of Wisdom
                     Debug.Log("Spawning a Spirit of Wisdom.");
-                    Constants.spiritPool.SpawnSpirit(Spirit.SpiritType.WISDOM, 1, this.transform.position);
+                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.WISDOM, 1, this.transform.position);
                     break;
 
                 default:

@@ -5,7 +5,6 @@ using UnityEngine.Assertions;
 
 public class SpiritOfCourageEffect : MonoBehaviour {
 
-    public const string NAME = "SpiritCourageEffect";
     SpriteRenderer spriteRenderer;
     BoxCollider2D boxCollider;
 
@@ -24,7 +23,7 @@ public class SpiritOfCourageEffect : MonoBehaviour {
     public void Highlight (Vector3 targetPosition, int level) {
         transform.position = targetPosition;
         Vector2 effectSize = (level * 2 + 1) * Vector2.one;
-        boxCollider.size = effectSize - Constants.COLLIDER_SCALE_OFFSET * Vector2.one;
+        boxCollider.size = effectSize - Configurable.instance.COLLIDER_SCALE_OFFSET * Vector2.one;
         spriteRenderer.size = effectSize;
         spriteRenderer.enabled = true;
     }
@@ -47,7 +46,7 @@ public class SpiritOfCourageEffect : MonoBehaviour {
         Tile t = other.gameObject.GetComponent<Tile>();
         Mergeable m = other.gameObject.GetComponent<Mergeable>();
 
-        if (t != null && Equals(t.gameObject.layer, LayerMask.NameToLayer(Constants.LAYER_NAME_TILE))) {
+        if (t != null && Equals(t.gameObject.layer, LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.TILE]))) {
             if (!tilesToPurify.Contains(t)) {
                 tilesToPurify.Add(t);
             }
@@ -56,8 +55,8 @@ public class SpiritOfCourageEffect : MonoBehaviour {
         
         if (m != null) {
             if (!itemsToDestroy.Contains(m) &&
-                (Equals(m.gameObject.layer, LayerMask.NameToLayer(Constants.LAYER_NAME_SOUL_BOUNDS)) ||
-                 Equals(m.gameObject.layer, LayerMask.NameToLayer(Constants.LAYER_NAME_SPIRIT_BOUNDS)))) {
+                (Equals(m.gameObject.layer, LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.SOUL_BOUNDS])) ||
+                 Equals(m.gameObject.layer, LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.SPIRIT_BOUNDS])))) {
                 itemsToDestroy.Add(m);
             }
         }

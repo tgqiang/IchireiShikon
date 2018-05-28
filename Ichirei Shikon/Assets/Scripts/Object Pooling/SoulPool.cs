@@ -78,7 +78,7 @@ public class SoulPool : ObjectPool {
     protected override void AssertRequiredConditions () {
         base.AssertRequiredConditions();
 
-        Debug.Assert(prefabs.Length == Constants.NUM_SOUL_OBJECTS, "Incorrect number of prefabs detected in SoulPool.");
+        Debug.Assert(prefabs.Length == Configurable.NUM_SOUL_OBJECTS, "Incorrect number of prefabs detected in SoulPool.");
         Debug.Assert(prefabs[(int) Soul.SoulType.ARAMITAMA].GetComponent<SoulAramitama>() != null, "SoulAramitama prefab should be in [0]th index.");
         Debug.Assert(prefabs[(int) Soul.SoulType.NIGIMITAMA].GetComponent<SoulNigimitama>() != null, "SoulNigimitama prefab should be in [1]st index.");
         Debug.Assert(prefabs[(int) Soul.SoulType.SAKIMITAMA].GetComponent<SoulSakimitama>() != null, "SoulSakimitama prefab should be in [2]nd index.");
