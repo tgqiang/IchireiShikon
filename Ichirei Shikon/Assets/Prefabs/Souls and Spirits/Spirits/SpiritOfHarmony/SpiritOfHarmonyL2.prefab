@@ -262,7 +262,7 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 0.2, y: 0.2}
+    oldSize: {x: 1, y: 1}
     newSize: {x: 0.2, y: 0.2}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
@@ -384,11 +384,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   level: 2
   levelSprites:
-  - {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 21300000, guid: 462b1fe3637376e47bd71123c84f78cb, type: 3}
+  - {fileID: 21300000, guid: 9366c6aa9dcfa7f49b9c26227b3bcc57, type: 3}
+  - {fileID: 21300000, guid: 4db9381853733774a98ccef3077f7885, type: 3}
+  - {fileID: 21300000, guid: 5f424a8d95188d844938e585dd6f8a0e, type: 3}
+  - {fileID: 21300000, guid: 49fe35d50b63752488b7aa5e52e3e3ee, type: 3}
   neighbourSpirits:
   - {fileID: 0}
   - {fileID: 0}
@@ -429,7 +429,7 @@ SpriteRenderer:
   m_SortingLayerID: 1253721321
   m_SortingLayer: 2
   m_SortingOrder: 1
-  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  m_Sprite: {fileID: 21300000, guid: 9366c6aa9dcfa7f49b9c26227b3bcc57, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
