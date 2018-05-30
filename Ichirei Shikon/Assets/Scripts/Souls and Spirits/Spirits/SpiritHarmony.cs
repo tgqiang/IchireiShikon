@@ -34,11 +34,11 @@ public class SpiritHarmony : Spirit {
     protected override void OnRelease () {
         base.OnRelease();
 
-        spiritHarmonyEffect.Unhighlight();
-
         if (timeSinceInput <= Configurable.instance.INPUT_DIFFERENTIATION_THRESHOLD) {
             TriggerEffect();
         }
+
+        spiritHarmonyEffect.Unhighlight();
 
         SetObjectToInactiveState();
     }
@@ -50,7 +50,7 @@ public class SpiritHarmony : Spirit {
     protected override void TriggerEffect () {
         if (isActive) {
             SetObjectToInactiveState();
-            spiritHarmonyEffect.CastEffect(this.level);
+            spiritHarmonyEffect.CastEffect();
             gameObject.SetActive(false);
         }
     }

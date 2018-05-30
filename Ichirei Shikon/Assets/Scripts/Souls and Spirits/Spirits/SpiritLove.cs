@@ -34,11 +34,11 @@ public class SpiritLove : Spirit {
     protected override void OnRelease () {
         base.OnRelease();
 
-        spiritLoveEffect.Unhighlight();
-
         if (timeSinceInput <= Configurable.instance.INPUT_DIFFERENTIATION_THRESHOLD) {
             TriggerEffect();
         }
+
+        spiritLoveEffect.Unhighlight();
 
         SetObjectToInactiveState();
     }

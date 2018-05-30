@@ -1,35 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Assertions;
 
-public class SpiritOfLoveEffectZone : MonoBehaviour {
+public class SpiritOfHarmonyEffectSpawnZone : MonoBehaviour {
 
-    static SpiritOfLoveEffect parent;
-    static Color effectiveColor = Color.white;
-    static Color ineffectiveColor = new Color(1, 1, 1, 0.5f);
+    static SpiritOfHarmonyEffect parent;
 
     [SerializeField]
     int zoneIndex;
 
-    SpriteRenderer spriteRenderer;
 
+    void Awake () {
+        parent = GetComponentInParent<SpiritOfHarmonyEffect>();
+        Debug.Assert(parent != null, "Missing SpiritOfHarmonyEffect parent component in SpiritOfHarmonyEffectSpawnZone game object.");
 
-	void Awake () {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        Debug.Assert(spriteRenderer != null, "Missing SpriteRenderer component in SpiritOfLoveEfectZone game object.");
-
-        parent = GetComponentInParent<SpiritOfLoveEffect>();
-        Debug.Assert(parent != null, "Missing SpiritOfLoveEffect parent component in SpiritOfLoveEffectZone game object.");
-
-        Debug.Assert(zoneIndex >= 0 && zoneIndex < Configurable.instance.SPIRIT_OF_LOVE_SOULS_SPAWNED_AT_LEVEL[Configurable.instance.MAX_SPIRIT_LEVEL_BUFFED - 1], "Incorrect zone index for SpiritOfLoveEffectZone.");
-	}
+        Debug.Assert(zoneIndex >= 0 && zoneIndex < Configurable.instance.SPIRIT_OF_HARMONY_SOULS_SPAWNED_AT_LEVEL[Configurable.instance.MAX_SPIRIT_LEVEL_BUFFED - 1], "Incorrect zone index for SpiritOfHarmonyEffectSpawnZone.");
+    }
 
     void OnTriggerEnter2D (Collider2D other) {
         if ((Equals(other.gameObject.layer, LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.SOUL_BOUNDS])) ||
              Equals(other.gameObject.layer, LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.SPIRIT_BOUNDS])))) {
             parent.isZoneOccupied[zoneIndex] = true;
-            spriteRenderer.color = ineffectiveColor;
         }
     }
 
@@ -37,7 +28,6 @@ public class SpiritOfLoveEffectZone : MonoBehaviour {
         if ((Equals(other.gameObject.layer, LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.SOUL_BOUNDS])) ||
              Equals(other.gameObject.layer, LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.SPIRIT_BOUNDS])))) {
             parent.isZoneOccupied[zoneIndex] = false;
-            spriteRenderer.color = effectiveColor;
         }
     }
 }
