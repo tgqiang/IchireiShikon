@@ -52,6 +52,7 @@ public class Configurable : MonoBehaviour {
     public int MAX_SPIRIT_LEVEL_BUFFED = 5;
 
     public int[] SPIRIT_OF_LOVE_SOULS_SPAWNED_AT_LEVEL = { 2, 4, 6, 8, 8 };
+    public int[] SPIRIT_OF_HARMONY_SOULS_SPAWNED_AT_LEVEL = { 2, 4, 6, 8, 8 };
     // ========================================================================================================== //
 
 
