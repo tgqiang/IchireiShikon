@@ -5,7 +5,7 @@ Preset:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: SpiritOfLoveEffectZone
+  m_Name: SpiritOfLoveEffectZoneDefault
   m_TargetType:
     m_NativeTypeID: 114
     m_ManagedTypePPtr: {fileID: 11500000, guid: 464fea991cc7e0c4abe9e675553a9bca,
