@@ -1,0 +1,110 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!181963792 &2655988077585873504
+Preset:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: SpiritOfLoveEffect
+  m_TargetType:
+    m_NativeTypeID: 114
+    m_ManagedTypePPtr: {fileID: 11500000, guid: 5ebc782abc01ff544bc2120cd26c1ea3,
+      type: 3}
+    m_ManagedTypeFallback: 
+  m_Properties:
+  - target: {fileID: 0}
+    propertyPath: m_Enabled
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorHideFlags
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_Name
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorClassIdentifier
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: zones.Array.size
+    value: 8
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: zones.Array.data[0]
+    value: 
+    objectReference: {fileID: 1517927135393714, guid: e55015d6d02f0d14a9adc7c4c2f73d06,
+      type: 2}
+  - target: {fileID: 0}
+    propertyPath: zones.Array.data[1]
+    value: 
+    objectReference: {fileID: 1796287691480884, guid: e55015d6d02f0d14a9adc7c4c2f73d06,
+      type: 2}
+  - target: {fileID: 0}
+    propertyPath: zones.Array.data[2]
+    value: 
+    objectReference: {fileID: 1003509620741976, guid: e55015d6d02f0d14a9adc7c4c2f73d06,
+      type: 2}
+  - target: {fileID: 0}
+    propertyPath: zones.Array.data[3]
+    value: 
+    objectReference: {fileID: 1719643430509416, guid: e55015d6d02f0d14a9adc7c4c2f73d06,
+      type: 2}
+  - target: {fileID: 0}
+    propertyPath: zones.Array.data[4]
+    value: 
+    objectReference: {fileID: 1714514965131238, guid: e55015d6d02f0d14a9adc7c4c2f73d06,
+      type: 2}
+  - target: {fileID: 0}
+    propertyPath: zones.Array.data[5]
+    value: 
+    objectReference: {fileID: 1993152746588954, guid: e55015d6d02f0d14a9adc7c4c2f73d06,
+      type: 2}
+  - target: {fileID: 0}
+    propertyPath: zones.Array.data[6]
+    value: 
+    objectReference: {fileID: 1845223536602976, guid: e55015d6d02f0d14a9adc7c4c2f73d06,
+      type: 2}
+  - target: {fileID: 0}
+    propertyPath: zones.Array.data[7]
+    value: 
+    objectReference: {fileID: 1508656686182940, guid: e55015d6d02f0d14a9adc7c4c2f73d06,
+      type: 2}
+  - target: {fileID: 0}
+    propertyPath: isZoneOccupied.Array.size
+    value: 8
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: isZoneOccupied.Array.data[0]
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: isZoneOccupied.Array.data[1]
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: isZoneOccupied.Array.data[2]
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: isZoneOccupied.Array.data[3]
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: isZoneOccupied.Array.data[4]
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: isZoneOccupied.Array.data[5]
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: isZoneOccupied.Array.data[6]
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: isZoneOccupied.Array.data[7]
+    value: 0
+    objectReference: {fileID: 0}

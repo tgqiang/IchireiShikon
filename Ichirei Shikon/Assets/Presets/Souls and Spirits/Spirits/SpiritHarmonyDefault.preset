@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!181963792 &2655988077585873504
+Preset:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: SpiritHarmonyDefault
+  m_TargetType:
+    m_NativeTypeID: 114
+    m_ManagedTypePPtr: {fileID: 11500000, guid: 0e265078f0cdf724f9c941ae0b909f39,
+      type: 3}
+    m_ManagedTypeFallback: 
+  m_Properties:
+  - target: {fileID: 0}
+    propertyPath: m_Enabled
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorHideFlags
+    value: 0
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_Name
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: m_EditorClassIdentifier
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: level
+    value: 1
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: levelSprites.Array.size
+    value: 5
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: levelSprites.Array.data[0]
+    value: 
+    objectReference: {fileID: 21300000, guid: 462b1fe3637376e47bd71123c84f78cb, type: 3}
+  - target: {fileID: 0}
+    propertyPath: levelSprites.Array.data[1]
+    value: 
+    objectReference: {fileID: 21300000, guid: 9366c6aa9dcfa7f49b9c26227b3bcc57, type: 3}
+  - target: {fileID: 0}
+    propertyPath: levelSprites.Array.data[2]
+    value: 
+    objectReference: {fileID: 21300000, guid: 4db9381853733774a98ccef3077f7885, type: 3}
+  - target: {fileID: 0}
+    propertyPath: levelSprites.Array.data[3]
+    value: 
+    objectReference: {fileID: 21300000, guid: 5f424a8d95188d844938e585dd6f8a0e, type: 3}
+  - target: {fileID: 0}
+    propertyPath: levelSprites.Array.data[4]
+    value: 
+    objectReference: {fileID: 21300000, guid: 49fe35d50b63752488b7aa5e52e3e3ee, type: 3}
+  - target: {fileID: 0}
+    propertyPath: neighbourSpirits.Array.size
+    value: 4
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: neighbourSpirits.Array.data[0]
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: neighbourSpirits.Array.data[1]
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: neighbourSpirits.Array.data[2]
+    value: 
+    objectReference: {fileID: 0}
+  - target: {fileID: 0}
+    propertyPath: neighbourSpirits.Array.data[3]
+    value: 
+    objectReference: {fileID: 0}
