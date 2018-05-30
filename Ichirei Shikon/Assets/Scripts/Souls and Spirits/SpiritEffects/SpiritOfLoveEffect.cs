@@ -7,6 +7,8 @@ public class SpiritOfLoveEffect : MonoBehaviour {
 
     static int effectLevel;
 
+    public SpiritLove owner;
+
     [SerializeField]
     GameObject[] zones;
 
@@ -22,7 +24,9 @@ public class SpiritOfLoveEffect : MonoBehaviour {
         Debug.Assert(isZoneOccupied.Length == Configurable.instance.SPIRIT_OF_LOVE_SOULS_SPAWNED_AT_LEVEL[Configurable.instance.MAX_SPIRIT_LEVEL_BUFFED - 1], "Incorrect length of array of effect zone vacancy-tracking for SpiritOfLoveEffect.");
     }
 
-    public void Highlight (Vector3 targetPosition, int level) {
+    public void Highlight (SpiritLove caller, Vector3 targetPosition, int level) {
+        owner = caller;
+
         transform.position = targetPosition;
         effectLevel = level;
 

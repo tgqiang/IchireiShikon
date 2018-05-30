@@ -23,7 +23,7 @@ public class SpiritHarmony : Spirit {
         if (hit) {
             if (hit.collider.name == Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.TILE_BOUNDS] || hit.collider == colliderSelf) {
                 tileHighlighter.Highlight(hit.transform.position);
-                spiritHarmonyEffect.Highlight(hit.transform.position, this.level);
+                spiritHarmonyEffect.Highlight(this, hit.transform.position, this.level);
                 nearestTilePosition = hit.transform.position;
             }
         }

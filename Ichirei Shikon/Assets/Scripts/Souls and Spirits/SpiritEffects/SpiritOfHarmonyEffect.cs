@@ -10,6 +10,8 @@ public class SpiritOfHarmonyEffect : MonoBehaviour {
 
     static int effectLevel;
 
+    public SpiritHarmony owner;
+
     [SerializeField]
     GameObject[] soulSpawnZones;
     public bool[] isZoneOccupied;
@@ -29,7 +31,9 @@ public class SpiritOfHarmonyEffect : MonoBehaviour {
         Debug.Assert(isZoneOccupied.Length == Configurable.instance.SPIRIT_OF_HARMONY_SOULS_SPAWNED_AT_LEVEL[Configurable.instance.MAX_SPIRIT_LEVEL_BUFFED - 1], "Incorrect length of array of effect zone vacancy-tracking for SpiritOfHarmonyEffect.");
     }
 
-    public void Highlight (Vector3 targetPosition, int level) {
+    public void Highlight (SpiritHarmony caller, Vector3 targetPosition, int level) {
+        owner = caller;
+
         effectLevel = level;
         transform.position = targetPosition;
         Vector2 effectSize = (effectLevel * 2 + 1) * Vector2.one;
