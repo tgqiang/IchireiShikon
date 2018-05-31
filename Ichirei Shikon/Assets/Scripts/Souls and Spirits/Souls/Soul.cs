@@ -72,7 +72,7 @@ public class Soul : Mergeable {
         // We introduce a delay to ensure that the list of neighbouring Souls are updated before we check for possible merging operation.
         yield return new WaitForSeconds(Configurable.instance.NEIGHBOUR_CHECK_DELAY);
         AttemptMerge();
-        tileManager.TakeMove();     // TODO: investigate why putting this call as another coroutine does not trigger this call.
+        tileManager.TakeMove();     // NOTE: investigate why putting this call as another coroutine does not trigger this call.
     }
 
     /// <summary>
@@ -129,7 +129,7 @@ public class Soul : Mergeable {
     /// Merges souls where appropriate and creates a corresponding resulting Spirit.
     /// Note that the Spirit of Harmony is created as a special case.
     /// </summary>
-    protected override void AttemptMerge () {
+    public override void AttemptMerge () {
         List<Soul> connectedSoulsOfSameType = QueryConnectedSouls(new List<Soul>(), requiredType: this.soulType);
         List<Soul> connectedSoulsOfAnyType = QueryConnectedSouls(new List<Soul>(), false);
         
@@ -138,17 +138,16 @@ public class Soul : Mergeable {
         int numSoulsSakimitama = connectedSoulsOfAnyType.FindAll(s => s.soulType == SoulType.SAKIMITAMA).Count;
         int numSoulsKushimitama = connectedSoulsOfAnyType.FindAll(s => s.soulType == SoulType.KUSHIMITAMA).Count;
 
-        if (Mathf.Max(numSoulsAramitama, numSoulsNigimitama, numSoulsSakimitama, numSoulsKushimitama) != 0) {
-            if (numSoulsAramitama == numSoulsNigimitama &&
-                numSoulsNigimitama == numSoulsSakimitama &&
-                numSoulsSakimitama == numSoulsKushimitama) {
-                foreach (Soul s in connectedSoulsOfAnyType) {
-                    s.gameObject.SetActive(false);
-                }
+        int minSoulsOfAnyOneType = Mathf.Min(numSoulsAramitama, numSoulsNigimitama, numSoulsSakimitama, numSoulsKushimitama);
+        int maxSoulsOfAnyOneType = Mathf.Max(numSoulsAramitama, numSoulsNigimitama, numSoulsSakimitama, numSoulsKushimitama);
 
-                SpawnSpiritOnMerge(specialCaseSatisfied: true);
-                return;
+        if (minSoulsOfAnyOneType == maxSoulsOfAnyOneType && maxSoulsOfAnyOneType != 0) {
+            foreach (Soul s in connectedSoulsOfAnyType) {
+                s.gameObject.SetActive(false);
             }
+
+            SpawnSpiritOnMerge(0, maxSoulsOfAnyOneType, true);
+            return;
         }
 
         int numConnectedSoulsOfSameType = connectedSoulsOfSameType.Count;
@@ -162,45 +161,47 @@ public class Soul : Mergeable {
         }
     }
 
-    protected virtual void SpawnSpiritOnMerge (int connectedSoulOfSameTypeCount = 0, bool specialCaseSatisfied = false) {
+    protected virtual void SpawnSpiritOnMerge (int connectedSoulOfSameTypeCount = 0, int connectedSoulOfAnyTypeCount = 0, bool specialCaseSatisfied = false) {
         if (!specialCaseSatisfied) {
             Debug.Assert(connectedSoulOfSameTypeCount >= Configurable.instance.NUM_OBJECTS_FOR_MERGE,
             "Soul-merging should not take place for less than " + Configurable.instance.NUM_OBJECTS_FOR_MERGE + " connected souls for non-special case.");
         }
 
         if (specialCaseSatisfied) {
-            // Spawn a Spirit of Harmony
-            Debug.Log("Spawning a Spirit of Harmony.");
-            Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.HARMONY, 1, this.transform.position);
+            Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.HARMONY, connectedSoulOfAnyTypeCount, this.transform.position).AttemptMerge();
         } else {
+            int spawnedSpiritLevel = 1 + Mathf.FloorToInt((connectedSoulOfSameTypeCount - 3) / 2);
+            bool hasExtra = (connectedSoulOfSameTypeCount - 3) % 2 == 1;
+
             switch (soulType) {
                 case SoulType.ARAMITAMA:
-                    // Spawn a Spirit of Courage
-                    Debug.Log("Spawning a Spirit of Courage.");
-                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.COURAGE, 1, this.transform.position);
+                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.COURAGE, spawnedSpiritLevel, this.transform.position).AttemptMerge();
                     break;
 
                 case SoulType.NIGIMITAMA:
-                    // Spawn a Spirit of Friendship
-                    Debug.Log("Spawning a Spirit of Friendship.");
-                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.FRIENDSHIP, 1, this.transform.position);
+                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.FRIENDSHIP, spawnedSpiritLevel, this.transform.position).AttemptMerge();
                     break;
 
                 case SoulType.SAKIMITAMA:
-                    // Spawn a Spirit of Love
-                    Debug.Log("Spawning a Spirit of Love.");
-                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.LOVE, 1, this.transform.position);
+                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.LOVE, spawnedSpiritLevel, this.transform.position).AttemptMerge();
                     break;
 
                 case SoulType.KUSHIMITAMA:
-                    // Spawn a Spirit of Wisdom
-                    Debug.Log("Spawning a Spirit of Wisdom.");
-                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.WISDOM, 1, this.transform.position);
+                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.WISDOM, spawnedSpiritLevel, this.transform.position).AttemptMerge();
                     break;
 
                 default:
                     Debug.LogException(new System.Exception("Unknown SoulType encountered by SpawnSpiritOnMerge() when non-special case is encountered."), this);
                     break;
+            }
+
+            if (hasExtra) {
+                RaycastHit2D hit = Physics2D.Raycast(new Vector2(this.nearestTilePosition.x, this.nearestTilePosition.y), Vector2.zero, 5f, LayerMask.GetMask(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.TILE]));
+
+                if (hit) {
+                    Tile currentTile = hit.collider.GetComponent<Tile>();
+                    currentTile.Purify();
+                }
             }
         }
     }

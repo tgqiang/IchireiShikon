@@ -43,7 +43,7 @@ public class SpiritHarmony : Spirit {
         SetObjectToInactiveState();
     }
 
-    protected override void AttemptMerge () {
+    public override void AttemptMerge () {
         base.AttemptMerge();
     }
 

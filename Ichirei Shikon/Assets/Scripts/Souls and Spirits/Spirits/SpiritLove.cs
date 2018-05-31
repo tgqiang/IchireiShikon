@@ -43,7 +43,7 @@ public class SpiritLove : Spirit {
         SetObjectToInactiveState();
     }
 
-    protected override void AttemptMerge () {
+    public override void AttemptMerge () {
         base.AttemptMerge();
     }
 

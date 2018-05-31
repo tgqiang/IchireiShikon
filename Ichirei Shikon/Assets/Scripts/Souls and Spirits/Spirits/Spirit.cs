@@ -163,14 +163,10 @@ public class Spirit : Mergeable {
     /// Merges souls where appropriate and creates a corresponding resulting Spirit.
     /// Note that the Spirit of Harmony is created as a special case.
     /// </summary>
-    // TODO: Merging mechanics for Spirits might be more complicated, do consider revisiting this function.
-    protected override void AttemptMerge () {
+    // NOTE: Merging mechanics for Spirits might be more complicated, do consider revisiting this function.
+    public override void AttemptMerge () {
         List<Spirit> connectedSpiritsOfSameType = QueryConnectedSpirits(new List<Spirit>(), this.level, true, this.spiritType);
         List<Spirit> connectedSpiritsOfAnyType = QueryConnectedSpirits(new List<Spirit>(), this.level, false);
-
-        foreach (Spirit t in connectedSpiritsOfSameType) {
-            Debug.Log(t);
-        }
 
         int numSpiritsCourage = connectedSpiritsOfAnyType.FindAll(s => s.spiritType == SpiritType.COURAGE).Count;
         int numSpiritsFriendship = connectedSpiritsOfAnyType.FindAll(s => s.spiritType == SpiritType.FRIENDSHIP).Count;
@@ -178,17 +174,16 @@ public class Spirit : Mergeable {
         int numSpiritsWisdom = connectedSpiritsOfAnyType.FindAll(s => s.spiritType == SpiritType.WISDOM).Count;
         int numSpiritsHarmony = connectedSpiritsOfAnyType.FindAll(s => s.spiritType == SpiritType.HARMONY).Count;
 
-        if (Mathf.Max(numSpiritsCourage, numSpiritsFriendship, numSpiritsLove, numSpiritsWisdom) != 0) {
-            if (numSpiritsCourage == numSpiritsFriendship &&
-                numSpiritsFriendship == numSpiritsLove &&
-                numSpiritsLove == numSpiritsWisdom) {
-                foreach (Spirit s in connectedSpiritsOfAnyType) {
-                    s.gameObject.SetActive(false);
-                }
+        int minSpiritsOfAnyOneType = Mathf.Min(numSpiritsCourage, numSpiritsFriendship, numSpiritsLove, numSpiritsWisdom);
+        int maxSpiritsOfAnyOneType = Mathf.Max(numSpiritsCourage, numSpiritsFriendship, numSpiritsLove, numSpiritsWisdom);
 
-                SpawnSpiritOnMerge(specialCaseSatisfied: true);
-                return;
+        if (minSpiritsOfAnyOneType == maxSpiritsOfAnyOneType && maxSpiritsOfAnyOneType != 0) {
+            foreach (Spirit s in connectedSpiritsOfAnyType) {
+                s.gameObject.SetActive(false);
             }
+
+            SpawnSpiritOnMerge(0, maxSpiritsOfAnyOneType, true);
+            return;
         }
 
         int numConnectedSoulsOfSameType = connectedSpiritsOfSameType.Count;
@@ -202,48 +197,48 @@ public class Spirit : Mergeable {
         }
     }
 
-    // TODO: Merging mechanics for Spirits might be more complicated, do consider revisiting this function.
-    // TODO: Need to also make sure to increment the level of the spawned spirit.
-    protected virtual void SpawnSpiritOnMerge (int connectedSoulOfSameTypeCount = 0, bool specialCaseSatisfied = false) {
+    // NOTE: Merging mechanics for Spirits might be more complicated, do consider revisiting this function.
+    protected virtual void SpawnSpiritOnMerge (int connectedSpiritOfSameTypeCount = 0, int connectedSpiritOfAnyTypeCount = 0, bool specialCaseSatisfied = false) {
         if (!specialCaseSatisfied) {
-            Debug.Assert(connectedSoulOfSameTypeCount >= Configurable.instance.NUM_OBJECTS_FOR_MERGE,
+            Debug.Assert(connectedSpiritOfSameTypeCount >= Configurable.instance.NUM_OBJECTS_FOR_MERGE,
             "Spirit-merging should not take place for less than " + Configurable.instance.NUM_OBJECTS_FOR_MERGE + " connected spirits for non-special case.");
         }
-        
+
         if (specialCaseSatisfied) {
-            // Spawn a Spirit of Harmony
-            Debug.Log("Spawning a Spirit of Harmony.");
-            Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.HARMONY, this.level + 1, this.transform.position);
+            Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.HARMONY, this.level + connectedSpiritOfAnyTypeCount, this.transform.position).AttemptMerge();
         } else {
-            // TODO: create/"create" the corresponding Spirit GameObject at current position.
+            int spawnedSpiritLevel = this.level + Mathf.FloorToInt((connectedSpiritOfSameTypeCount - 3) / 2);
+            bool hasExtra = (connectedSpiritOfSameTypeCount - 3) % 2 == 1;
+
             switch (spiritType) {
                 case SpiritType.COURAGE:
-                    // Spawn a Spirit of Courage
-                    Debug.Log("Spawning a Spirit of Courage.");
-                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.COURAGE, this.level + 1, this.transform.position);
+                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.COURAGE, spawnedSpiritLevel, this.transform.position).AttemptMerge();
                     break;
 
                 case SpiritType.FRIENDSHIP:
-                    // Spawn a Spirit of Friendship
-                    Debug.Log("Spawning a Spirit of Friendship.");
-                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.FRIENDSHIP, this.level + 1, this.transform.position);
+                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.FRIENDSHIP, spawnedSpiritLevel, this.transform.position).AttemptMerge();
                     break;
 
                 case SpiritType.LOVE:
-                    // Spawn a Spirit of Love
-                    Debug.Log("Spawning a Spirit of Love.");
-                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.LOVE, this.level + 1, this.transform.position);
+                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.LOVE, spawnedSpiritLevel, this.transform.position).AttemptMerge();
                     break;
 
                 case SpiritType.WISDOM:
-                    // Spawn a Spirit of Wisdom
-                    Debug.Log("Spawning a Spirit of Wisdom.");
-                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.WISDOM, this.level + 1, this.transform.position);
+                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.WISDOM, spawnedSpiritLevel, this.transform.position).AttemptMerge();
                     break;
 
                 default:
                     Debug.LogException(new System.Exception("Unknown SpiritType encountered by SpawnSpiritOnMerge() when non-special case is encountered."), this);
                     break;
+            }
+
+            if (hasExtra) {
+                RaycastHit2D hit = Physics2D.Raycast(new Vector2(this.nearestTilePosition.x, this.nearestTilePosition.y), Vector2.zero, 5f, LayerMask.GetMask(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.TILE]));
+
+                if (hit) {
+                    Tile currentTile = hit.collider.GetComponent<Tile>();
+                    currentTile.Purify();
+                }
             }
         }
     }
@@ -259,13 +254,13 @@ public class Spirit : Mergeable {
         }
 
         if (hasReceivedSpecialBuff && this.level < Configurable.instance.MAX_SPIRIT_LEVEL_BUFFED) {
-            UpdateSpiritLevel();
+            RaiseSpiritLevelOnce();
         } else if (this.level < Configurable.instance.MAX_SPIRIT_LEVEL_UNBUFFED) {
-            UpdateSpiritLevel();
+            RaiseSpiritLevelOnce();
         }
     }
 
-    protected virtual void UpdateSpiritLevel () {
+    protected virtual void RaiseSpiritLevelOnce () {
         this.level += 1;
         spriteRenderer.sprite = levelSprites[this.level - 1];
     }
@@ -276,8 +271,8 @@ public class Spirit : Mergeable {
     }
 
     protected virtual void TriggerEffect () {
-        // Empty-bodied function for subclasses to override.
-        // TODO: implement trigger-effect algorithm in subclasses.
+        // Spirits will trigger their effects through their corresponding SpiritEffect objects.
+        // Effect-triggering algorithm is implemented in each different typed-Spirit subclasses.
     }
 
 }

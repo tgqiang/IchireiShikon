@@ -40,14 +40,16 @@ public class Mergeable : MonoBehaviour {
         colliderSelf = GetComponent<BoxCollider2D>();
         Debug.Assert(colliderSelf != null, "BoxCollider 2D component is missing for a GameObject containing the Mergeable script.");
 
-        prevPosition = transform.position;
-        nearestTilePosition = transform.position;
-
         Debug.Assert(tileHighlighter != null, "Tile Highlighter GameObject/Component is missing, likely not set by TileHighlighter script. Also check if TileHighlighter Game Object exists in scene.");
     }
-	
-	// Update is called once per frame
-	protected virtual void Update () {
+
+    void OnEnable () {
+        prevPosition = transform.position;
+        nearestTilePosition = transform.position;
+    }
+
+    // Update is called once per frame
+    protected virtual void Update () {
         if (Input.GetMouseButtonDown(Configurable.MOUSE_BUTTON_LEFT)) {
             // we only want to allow the object, that was clicked on by the player, to be movable.
             isActive = IsClickedOn(Input.mousePosition);
@@ -64,11 +66,13 @@ public class Mergeable : MonoBehaviour {
     }
 
     protected virtual void OnTriggerEnter2D (Collider2D other) {
-        // Empty-bodied function for subclasses to override.
+        // Trigger-collision methods are used for handling neighbour-object detection.
+        // This method will be overriden in Soul and Spirit subclasses.
     }
 
     protected virtual void OnTriggerExit2D (Collider2D other) {
-        // Empty-bodied function for subclasses to override.
+        // Trigger-collision methods are used for handling neighbour-object detection.
+        // This method will be overriden in Soul and Spirit subclasses.
     }
 
     protected virtual bool IsClickedOn (Vector3 mousePosition) {
@@ -140,8 +144,7 @@ public class Mergeable : MonoBehaviour {
         timeSinceInput = 0f;
     }
 
-    protected virtual void AttemptMerge () {
-        // Empty-bodied function for subclasses to override.
-        // TODO: implement merging algorithm in subclasses.
+    public virtual void AttemptMerge () {
+        // Merging algorithm is implemented in Soul and Spirit subclasses.
     }
 }

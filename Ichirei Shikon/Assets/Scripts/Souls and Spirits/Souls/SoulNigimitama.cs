@@ -9,7 +9,7 @@ public class SoulNigimitama : Soul {
         soulType = SoulType.NIGIMITAMA;
     }
 
-    protected override void AttemptMerge () {
+    public override void AttemptMerge () {
         base.AttemptMerge();
     }
 }

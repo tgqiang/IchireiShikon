@@ -10,7 +10,7 @@ public class SoulAramitama : Soul {
         soulType = SoulType.ARAMITAMA;
 	}
 
-    protected override void AttemptMerge () {
+    public override void AttemptMerge () {
         base.AttemptMerge();
     }
 }
