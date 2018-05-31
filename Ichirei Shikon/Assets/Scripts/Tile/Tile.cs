@@ -12,7 +12,7 @@ using UnityEngine.Assertions;
 public class Tile : MonoBehaviour {
 
     public enum SpriteIndices {
-        UNTAINTED = 0, SHIELDED = 1, TAINTED = 2
+        NEUTRAL, TAINTED, PURIFIED, SHIELDED
     }
     /// <summary> Will be initialized by <see cref="TileManager"/> </summary> ///
     public static Sprite[] tileSprites;
@@ -25,7 +25,12 @@ public class Tile : MonoBehaviour {
         set { isTainted = value; }
     }
 
-    public static TileManager tileManager;
+    [SerializeField]
+    bool isPurified;
+    public bool IsPurified {
+        get { return isPurified; }
+        set { isPurified = value; }
+    }
 
     /// <summary> Refers to whether it is shielded against demonic tainting or not. </summary> ///
     [SerializeField]
@@ -34,6 +39,8 @@ public class Tile : MonoBehaviour {
         get { return hasBarrier; }
         set { hasBarrier = value; }
     }
+
+    public static TileManager tileManager;
 
     /// <summary> Refers to the neighbouring left, right, top and bottom tiles of this tile. </summary> ///
     List<Tile> neighbours = new List<Tile>(Configurable.NUM_NEIGHBOURS);
@@ -48,15 +55,6 @@ public class Tile : MonoBehaviour {
         Tile t = other.gameObject.GetComponent<Tile>();
         if (other.gameObject.layer == LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.TILE]) && !neighbours.Contains(t)) {
             neighbours.Add(t);
-        }
-    }
-
-    public void InitializeTile (bool isTainted) {
-        if (isTainted) {
-            isTainted = true;
-            UpdateSprite((int) SpriteIndices.TAINTED);
-        } else {
-            UpdateSprite((int) SpriteIndices.UNTAINTED);
         }
     }
 
@@ -79,6 +77,7 @@ public class Tile : MonoBehaviour {
         if (!hasBarrier) {
             if (!isTainted) {
                 isTainted = true;
+                isPurified = false;
                 UpdateSprite((int) SpriteIndices.TAINTED);
             }
         }
@@ -88,11 +87,11 @@ public class Tile : MonoBehaviour {
     /// Turns this tile into an untainted one, if it was tainted previously.
     /// </summary>
     public void Purify () {
-        if (isTainted) {
+        if (isTainted || !isPurified) {
             Debug.Assert(tileManager != null, "'tileManager' is not initialized for GameObject with Tile script.");
             tileManager.RemoveTileFromTaintedList(this);
             isTainted = false;
-            UpdateSprite((int) SpriteIndices.UNTAINTED);
+            UpdateSprite((int) SpriteIndices.PURIFIED);
         }
     }
 
@@ -103,6 +102,7 @@ public class Tile : MonoBehaviour {
         if (isTainted) {
             tileManager.RemoveTileFromTaintedList(this);
             isTainted = false;
+            isPurified = true;
         }
         if (!hasBarrier) {
             hasBarrier = true;
@@ -114,16 +114,20 @@ public class Tile : MonoBehaviour {
         Debug.Assert(tileSprites != null, "'tileSprites' attribute is not initialized by TileManager.");
         Debug.Assert(tileSprites[index] != null, "tileSprite[" + index + "] is missing.");
         switch (index) {
-            case (int) SpriteIndices.UNTAINTED:
-                Debug.Assert(tileSprites[index].name == Configurable.instance.UNTAINTED_TILE_NAME, "tileSprites[" + index + "] does not match required sprite.");
-                break;
-
-            case (int) SpriteIndices.SHIELDED:
-                Debug.Assert(tileSprites[index].name == Configurable.instance.SHIELDED_TILE_NAME, "tileSprites[" + index + "] does not match required sprite.");
+            case (int) SpriteIndices.NEUTRAL:
+                Debug.Assert(tileSprites[index].name == Configurable.instance.NEUTRAL_TILE_NAME, "tileSprites[" + index + "] does not match required sprite.");
                 break;
 
             case (int) SpriteIndices.TAINTED:
                 Debug.Assert(tileSprites[index].name == Configurable.instance.TAINTED_TILE_NAME, "tileSprites[" + index + "] does not match required sprite.");
+                break;
+
+            case (int) SpriteIndices.PURIFIED:
+                Debug.Assert(tileSprites[index].name == Configurable.instance.PURIFIED_TILE_NAME, "tileSprites[" + index + "] does not match required sprite.");
+                break;
+
+            case (int) SpriteIndices.SHIELDED:
+                Debug.Assert(tileSprites[index].name == Configurable.instance.SHIELDED_TILE_NAME, "tileSprites[" + index + "] does not match required sprite.");
                 break;
 
             default:

@@ -56,9 +56,10 @@ public class TileManager : MonoBehaviour {
     private void AssertCorrectTileSprites () {
         Debug.Assert(tileSprites != null, "'tileSprites' in TileManager is not initialized.");
         Debug.Assert(tileSprites.Length == Configurable.NUM_TILE_SPRITES, "There are incorrect number of tile sprites in TileManager.");
-        Debug.Assert(tileSprites[(int) Tile.SpriteIndices.UNTAINTED].name == Configurable.instance.UNTAINTED_TILE_NAME, "Untainted tile sprite in TileManager is incorrect.");
-        Debug.Assert(tileSprites[(int) Tile.SpriteIndices.SHIELDED].name == Configurable.instance.SHIELDED_TILE_NAME, "Invulnerable tile sprite in TileManager is incorrect.");
+        Debug.Assert(tileSprites[(int) Tile.SpriteIndices.NEUTRAL].name == Configurable.instance.NEUTRAL_TILE_NAME, "Neutral tile sprite in TileManager is incorrect.");
         Debug.Assert(tileSprites[(int) Tile.SpriteIndices.TAINTED].name == Configurable.instance.TAINTED_TILE_NAME, "Tainted tile sprite in TileManager is incorrect.");
+        Debug.Assert(tileSprites[(int) Tile.SpriteIndices.PURIFIED].name == Configurable.instance.PURIFIED_TILE_NAME, "Untainted tile sprite in TileManager is incorrect.");
+        Debug.Assert(tileSprites[(int) Tile.SpriteIndices.SHIELDED].name == Configurable.instance.SHIELDED_TILE_NAME, "Invulnerable tile sprite in TileManager is incorrect.");
     }
 
     /// <summary>
