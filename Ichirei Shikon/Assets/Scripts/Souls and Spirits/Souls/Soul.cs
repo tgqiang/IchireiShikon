@@ -168,9 +168,11 @@ public class Soul : Mergeable {
         }
 
         if (specialCaseSatisfied) {
-            Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.HARMONY, connectedSoulOfAnyTypeCount, this.transform.position).AttemptMerge();
+            int spawnedSpiritLevel = Mathf.Min(connectedSoulOfAnyTypeCount, Configurable.instance.MAX_SPIRIT_LEVEL_UNBUFFED);
+
+            Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.HARMONY, spawnedSpiritLevel, this.transform.position).AttemptMerge();
         } else {
-            int spawnedSpiritLevel = 1 + Mathf.FloorToInt((connectedSoulOfSameTypeCount - 3) / 2);
+            int spawnedSpiritLevel = Mathf.Min(1 + Mathf.FloorToInt((connectedSoulOfSameTypeCount - 3) / 2), Configurable.instance.MAX_SPIRIT_LEVEL_UNBUFFED);
             bool hasExtra = (connectedSoulOfSameTypeCount - 3) % 2 == 1;
 
             switch (soulType) {
@@ -195,7 +197,7 @@ public class Soul : Mergeable {
                     break;
             }
 
-            if (hasExtra) {
+            if (hasExtra || connectedSoulOfSameTypeCount >= 10) {
                 RaycastHit2D hit = Physics2D.Raycast(new Vector2(this.nearestTilePosition.x, this.nearestTilePosition.y), Vector2.zero, 5f, LayerMask.GetMask(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.TILE]));
 
                 if (hit) {

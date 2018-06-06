@@ -205,9 +205,11 @@ public class Spirit : Mergeable {
         }
 
         if (specialCaseSatisfied) {
-            Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.HARMONY, this.level + connectedSpiritOfAnyTypeCount, this.transform.position).AttemptMerge();
+            int spawnedSpiritLevel = Mathf.Min(this.level + connectedSpiritOfAnyTypeCount, Configurable.instance.MAX_SPIRIT_LEVEL_UNBUFFED);
+
+            Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.HARMONY, spawnedSpiritLevel, this.transform.position).AttemptMerge();
         } else {
-            int spawnedSpiritLevel = this.level + Mathf.FloorToInt((connectedSpiritOfSameTypeCount - 3) / 2);
+            int spawnedSpiritLevel = Mathf.Min(this.level + Mathf.FloorToInt((connectedSpiritOfSameTypeCount - 3) / 2), Configurable.instance.MAX_SPIRIT_LEVEL_UNBUFFED);
             bool hasExtra = (connectedSpiritOfSameTypeCount - 3) % 2 == 1;
 
             switch (spiritType) {
@@ -227,12 +229,16 @@ public class Spirit : Mergeable {
                     Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.WISDOM, spawnedSpiritLevel, this.transform.position).AttemptMerge();
                     break;
 
+                case SpiritType.HARMONY:
+                    Configurable.instance.spiritPool.SpawnSpirit(Spirit.SpiritType.HARMONY, spawnedSpiritLevel, this.transform.position).AttemptMerge();
+                    break;
+
                 default:
                     Debug.LogException(new System.Exception("Unknown SpiritType encountered by SpawnSpiritOnMerge() when non-special case is encountered."), this);
                     break;
             }
 
-            if (hasExtra) {
+            if (hasExtra || connectedSpiritOfSameTypeCount >= (10 - 2 * this.level)) {
                 RaycastHit2D hit = Physics2D.Raycast(new Vector2(this.nearestTilePosition.x, this.nearestTilePosition.y), Vector2.zero, 5f, LayerMask.GetMask(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.TILE]));
 
                 if (hit) {
