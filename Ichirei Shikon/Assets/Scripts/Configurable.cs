@@ -27,11 +27,12 @@ public class Configurable : MonoBehaviour {
 
     // ====================================== Tile System Configurations ======================================= //
     // ******************** [CONSTANTS (SHOULD NOT BE ALTERED)] ******************** //
-    public const int NUM_TILE_SPRITES = 3;
+    public const int NUM_TILE_SPRITES = 4;
     public const int NUM_NEIGHBOURS = 4;
 
     // ************************* [CONFIGURABLE ATTRIBUTES] ************************* //
-    public string UNTAINTED_TILE_NAME = "Tile_Untainted";
+    public string NEUTRAL_TILE_NAME = "Tile_Neutral";
+    public string PURIFIED_TILE_NAME = "Tile_Purified";
     public string SHIELDED_TILE_NAME = "Tile_Invulnerable";
     public string TAINTED_TILE_NAME = "Tile_Tainted";
     // ========================================================================================================== //
@@ -128,7 +129,7 @@ public class Configurable : MonoBehaviour {
 
 
 
-    // TODO: Possible future use for having movable game camera //
+    // NOTE: Possible future use for having movable game camera //
     public Camera mainCamera;
 
 
