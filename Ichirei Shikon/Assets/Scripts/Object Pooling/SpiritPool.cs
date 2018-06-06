@@ -118,11 +118,12 @@ public class SpiritPool : ObjectPool {
     /// Note that the caller of this method MUST check if the spot where the Spirit should be spawned is VACANT before calling this.
     /// </summary>
     /// <param name="desiredPosition">Where the Spirit should be spawned, which typically is a vacant tile's position.</param>
-    public void SpawnRandomSpirit (int desiredLevel, Vector3 desiredPosition) {
+    public Spirit SpawnRandomSpirit (int desiredLevel, Vector3 desiredPosition) {
         // { ALL SPIRITTYPES } \ { NONE }
         int spiritType = Random.Range((int) Spirit.SpiritType.COURAGE, (int) Spirit.SpiritType.NONE);
         GameObject spiritObj = RetrieveSpirit(spiritType, desiredLevel);
         SpawnSpiritObjectInScene(desiredPosition, desiredLevel, spiritObj);
+        return spiritObj.GetComponent<Spirit>();
     }
 
     /// <summary>
@@ -132,9 +133,10 @@ public class SpiritPool : ObjectPool {
     /// </summary>
     /// <param name="desiredType">The desired type of Spirit to spawn in the Scene.</param>
     /// <param name="desiredPosition">Where the Spirit should be spawned, which typically is a vacant tile's position.</param>
-    public void SpawnSpirit (Spirit.SpiritType desiredType, int desiredLevel, Vector3 desiredPosition) {
+    public Spirit SpawnSpirit (Spirit.SpiritType desiredType, int desiredLevel, Vector3 desiredPosition) {
         GameObject spiritObj = RetrieveSpirit(desiredType, desiredLevel);
         SpawnSpiritObjectInScene(desiredPosition, desiredLevel, spiritObj);
+        return spiritObj.GetComponent<Spirit>();
     }
 
     private static void SpawnSpiritObjectInScene (Vector3 desiredPosition, int desiredLevel, GameObject spiritObj) {

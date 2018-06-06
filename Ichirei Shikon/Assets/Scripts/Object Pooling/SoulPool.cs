@@ -51,11 +51,12 @@ public class SoulPool : ObjectPool {
     /// Note that the caller of this method MUST check if the spot where the Soul should be spawned is VACANT before calling this.
     /// </summary>
     /// <param name="desiredPosition">Where the Soul should be spawned, which typically is a vacant tile's position.</param>
-    public void SpawnRandomSoul (Vector3 desiredPosition) {
+    public Soul SpawnRandomSoul (Vector3 desiredPosition) {
         // { ALL SOULTYPES } \ { NONE }
         int soulType = Random.Range((int) Soul.SoulType.ARAMITAMA, (int) Soul.SoulType.NONE);
         GameObject soulObj = RetrieveSoul(soulType);
         SpawnSoulObjectInScene(desiredPosition, soulObj);
+        return soulObj.GetComponent<Soul>();
     }
 
     /// <summary>
@@ -65,9 +66,10 @@ public class SoulPool : ObjectPool {
     /// </summary>
     /// <param name="requiredType">The desired type of Soul to spawn in the Scene.</param>
     /// <param name="desiredPosition">Where the Soul should be spawned, which typically is a vacant tile's position.</param>
-    public void SpawnSoul (Soul.SoulType requiredType, Vector3 desiredPosition) {
+    public Soul SpawnSoul (Soul.SoulType requiredType, Vector3 desiredPosition) {
         GameObject soulObj = RetrieveSoul(requiredType);
         SpawnSoulObjectInScene(desiredPosition, soulObj);
+        return soulObj.GetComponent<Soul>();
     }
 
     private static void SpawnSoulObjectInScene (Vector3 desiredPosition, GameObject soulObj) {
