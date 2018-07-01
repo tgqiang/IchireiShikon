@@ -58,10 +58,7 @@ public class Spirit : Mergeable {
     protected override void OnTriggerExit2D (Collider2D other) {
         if (other.gameObject.layer == LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.SPIRIT])) {
             Spirit s = other.gameObject.GetComponentInParent<Spirit>();
-            int spiritIndex = neighbourSpirits.IndexOf(s);
-            if (spiritIndex != -1) {
-                neighbourSpirits[spiritIndex] = null;
-            }
+            RemoveSpiritFromNeighbourList(s);
         }
     }
 
@@ -75,6 +72,13 @@ public class Spirit : Mergeable {
             // This should be called in subclasses instead, since there are more operations
             // to be handled by the subclasses while resolving events occuring during 'active' state.
             // SetObjectToInactiveState();
+        }
+    }
+
+    public void RemoveSpiritFromNeighbourList (Spirit s) {
+        int spiritIndex = neighbourSpirits.IndexOf(s);
+        if (spiritIndex != -1) {
+            neighbourSpirits[spiritIndex] = null;
         }
     }
 
@@ -179,6 +183,9 @@ public class Spirit : Mergeable {
 
         if (minSpiritsOfAnyOneType == maxSpiritsOfAnyOneType && maxSpiritsOfAnyOneType != 0) {
             foreach (Spirit s in connectedSpiritsOfAnyType) {
+                foreach (Spirit t in s.neighbourSpirits) {
+                    if (t != null) t.RemoveSpiritFromNeighbourList(s);
+                }
                 s.gameObject.SetActive(false);
             }
 
@@ -190,6 +197,9 @@ public class Spirit : Mergeable {
 
         if (numConnectedSoulsOfSameType >= Configurable.instance.NUM_OBJECTS_FOR_MERGE) {
             foreach (Spirit s in connectedSpiritsOfSameType) {
+                foreach (Spirit t in s.neighbourSpirits) {
+                    if (t != null) t.RemoveSpiritFromNeighbourList(s);
+                }
                 s.gameObject.SetActive(false);
             }
 

@@ -50,10 +50,7 @@ public class Soul : Mergeable {
     protected override void OnTriggerExit2D (Collider2D other) {
         if (other.gameObject.layer == LayerMask.NameToLayer(Configurable.instance.LAYER_NAMES[(int) Configurable.LayerNameIndices.SOUL])) {
             Soul s = other.gameObject.GetComponentInParent<Soul>();
-            int soulIndex = neighbourSouls.IndexOf(s);
-            if (soulIndex != -1) {
-                neighbourSouls[soulIndex] = null;
-            }
+            RemoveSoulFromNeighbourList(s);
         }
     }
 
@@ -65,6 +62,13 @@ public class Soul : Mergeable {
             }
             
             SetObjectToInactiveState();
+        }
+    }
+
+    public void RemoveSoulFromNeighbourList (Soul s) {
+        int soulIndex = neighbourSouls.IndexOf(s);
+        if (soulIndex != -1) {
+            neighbourSouls[soulIndex] = null;
         }
     }
 
@@ -143,6 +147,9 @@ public class Soul : Mergeable {
 
         if (minSoulsOfAnyOneType == maxSoulsOfAnyOneType && maxSoulsOfAnyOneType != 0) {
             foreach (Soul s in connectedSoulsOfAnyType) {
+                foreach (Soul t in s.neighbourSouls) {
+                    if (t != null) t.RemoveSoulFromNeighbourList(s);
+                }
                 s.gameObject.SetActive(false);
             }
 
@@ -154,6 +161,9 @@ public class Soul : Mergeable {
 
         if (numConnectedSoulsOfSameType >= Configurable.instance.NUM_OBJECTS_FOR_MERGE) {
             foreach (Soul s in connectedSoulsOfSameType) {
+                foreach (Soul t in s.neighbourSouls) {
+                    if (t != null) t.RemoveSoulFromNeighbourList(s);
+                }
                 s.gameObject.SetActive(false);
             }
 
