@@ -6,6 +6,7 @@ using UnityEngine;
 public class Mergeable : MonoBehaviour {
 
     public const int SPIRIT_LEVEL_MAX = 4;
+    public const int MIN_OBJECTS_FOR_MERGE = 3;
 
     /// <summary>
     /// Rules for tainted objects:
@@ -14,16 +15,15 @@ public class Mergeable : MonoBehaviour {
     /// </summary>
     protected bool isTainted;
 
-    /// <summary>
-    /// This attribute is used to determine which Mergeable object was acted on by player input.
-    /// </summary>
-    protected bool isSelected;
-
     protected Tile currentLocation;
 
     public Sprite[] sprites;
+    
+    public virtual Tile GetLocation() {
+        return currentLocation;
+    }
 
-    public virtual void InitializeLocation(Tile t) {
+    public virtual void SetLocation(Tile t) {
         currentLocation = t;
     }
 
@@ -35,43 +35,43 @@ public class Mergeable : MonoBehaviour {
         isTainted = false;
     }
 
-    public virtual List<Mergeable> GetConnectedObjects(List<Mergeable> result, Mergeable triggeringObject) {
-        if (!result.Contains(this)) result.Add(this);
-
-        Tile[][] tilemap = Tile.gameLevel.GetMap();
+    public virtual List<Mergeable> GetConnectedObjects(List<Mergeable> result, Tile[][] tileMap, Vector2Int tilemapBounds) {
+        if (!result.Contains(this)) {
+            result.Add(this);
+        }
 
         if (currentLocation.tileCoords.x - 1 >= 0) {
-            Tile top = tilemap[currentLocation.tileCoords.x - 1][currentLocation.tileCoords.y];
+            Tile top = tileMap[currentLocation.tileCoords.x - 1][currentLocation.tileCoords.y];
             if (top != null) {
-                if (triggeringObject.IsSameTypeAs(top.objectOnTile)) {
-                    result = GetConnectedObjects(result, top.objectOnTile);
+                if (top.objectOnTile != null && IsSameTypeAs(top.objectOnTile) && !result.Contains(top.objectOnTile)) {
+                    result = top.objectOnTile.GetConnectedObjects(result, tileMap, tilemapBounds);
                 }
             }
         }
 
-        if (currentLocation.tileCoords.x + 1 < tilemap.Length) {
-            Tile bottom = tilemap[currentLocation.tileCoords.x + 1][currentLocation.tileCoords.y];
+        if (currentLocation.tileCoords.x + 1 < tilemapBounds.x) {
+            Tile bottom = tileMap[currentLocation.tileCoords.x + 1][currentLocation.tileCoords.y];
             if (bottom != null) {
-                if (triggeringObject.IsSameTypeAs(bottom.objectOnTile)) {
-                    result = GetConnectedObjects(result, bottom.objectOnTile);
+                if (bottom.objectOnTile != null && IsSameTypeAs(bottom.objectOnTile) && !result.Contains(bottom.objectOnTile)) {
+                    result = bottom.objectOnTile.GetConnectedObjects(result, tileMap, tilemapBounds);
                 }
             }
         }
 
         if (currentLocation.tileCoords.y - 1 >= 0) {
-            Tile left = tilemap[currentLocation.tileCoords.x - 1][currentLocation.tileCoords.y];
+            Tile left = tileMap[currentLocation.tileCoords.x][currentLocation.tileCoords.y - 1];
             if (left != null) {
-                if (triggeringObject.IsSameTypeAs(left.objectOnTile)) {
-                    result = GetConnectedObjects(result, left.objectOnTile);
+                if (left.objectOnTile != null && IsSameTypeAs(left.objectOnTile) && !result.Contains(left.objectOnTile)) {
+                    result = left.objectOnTile.GetConnectedObjects(result, tileMap, tilemapBounds);
                 }
             }
         }
 
-        if (currentLocation.tileCoords.y + 1 < tilemap[currentLocation.tileCoords.x].Length) {
-            Tile right = tilemap[currentLocation.tileCoords.x + 1][currentLocation.tileCoords.y];
+        if (currentLocation.tileCoords.y + 1 < tilemapBounds.y) {
+            Tile right = tileMap[currentLocation.tileCoords.x][currentLocation.tileCoords.y + 1];
             if (right != null) {
-                if (triggeringObject.IsSameTypeAs(right.objectOnTile)) {
-                    result = GetConnectedObjects(result, right.objectOnTile);
+                if (right.objectOnTile != null && IsSameTypeAs(right.objectOnTile) && !result.Contains(right.objectOnTile)) {
+                    result = right.objectOnTile.GetConnectedObjects(result, tileMap, tilemapBounds);
                 }
             }
         }
@@ -80,12 +80,15 @@ public class Mergeable : MonoBehaviour {
     }
 
     public virtual void Merge() {
-        List<Mergeable> connectedObjects = GetConnectedObjects(new List<Mergeable>(), this);
+        List<Mergeable> connectedObjects = GetConnectedObjects(new List<Mergeable>(),
+            Tile.gameLevel.levelData.tileMap, Tile.gameLevel.levelData.mapBounds);
         int numMergedObjects = connectedObjects.Count;
-        foreach (Mergeable obj in connectedObjects) {
-            Tile.RemoveFromTileAndDestroy(obj, obj.currentLocation);
+        if (numMergedObjects >= MIN_OBJECTS_FOR_MERGE) {
+            foreach (Mergeable obj in connectedObjects) {
+                Tile.RemoveFromTileAndDestroy(obj, obj.GetLocation());
+            }
+            SpawnObjectOnMerge(this, numMergedObjects);
         }
-        SpawnObjectOnMerge(this, numMergedObjects);
     }
 
     public virtual void SpawnObjectOnMerge(Mergeable triggeringObject, int mergedObjectCount) {
@@ -93,6 +96,6 @@ public class Mergeable : MonoBehaviour {
     }
 
     public virtual bool IsSameTypeAs(Mergeable other) {
-        return this == other;
+        return false;
     }
 }

@@ -23,6 +23,14 @@ public class Level : MonoBehaviour {
         }
 	}
 
+    void Update() {
+        if (levelData.taintedTiles.Count == levelData.totalTiles) {
+            // TODO: implement game-over state.
+        } else if (levelData.taintedTiles.IsNullOrEmpty()) {
+            // TODO: implement victory state.
+        }
+    }
+
     public Tile[][] GetMap() {
         return levelData.tileMap;
     }

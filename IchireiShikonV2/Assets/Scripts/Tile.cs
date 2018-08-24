@@ -22,7 +22,7 @@ public class Tile : MonoBehaviour {
 
     public Sprite[] tileSprites;
 
-    void OnEnable() {
+    void Start() {
         gameLevel = FindObjectOfType<Level>();
     }
 
@@ -80,10 +80,25 @@ public class Tile : MonoBehaviour {
 
     public void TaintNeighbouringTiles() {
         if (isTainted) {
-            if (tileCoords.x - 1 >= 0) { gameLevel.GetMap()[tileCoords.x - 1][tileCoords.y].Taint(); }
-            if (tileCoords.x + 1 < gameLevel.GetMap().Length) { gameLevel.GetMap()[tileCoords.x + 1][tileCoords.y].Taint(); }
-            if (tileCoords.y - 1 >= 0) { gameLevel.GetMap()[tileCoords.x][tileCoords.y - 1].Taint(); }
-            if (tileCoords.y + 1 < gameLevel.GetMap()[tileCoords.x].Length) { gameLevel.GetMap()[tileCoords.x][tileCoords.y + 1].Taint(); }
+            if (tileCoords.x - 1 >= 0) {
+                Tile tileToTaint = gameLevel.GetMap()[tileCoords.x - 1][tileCoords.y];
+                if (tileToTaint != null) tileToTaint.Taint();
+            }
+
+            if (tileCoords.x + 1 < gameLevel.GetMap().Length) {
+                Tile tileToTaint = gameLevel.GetMap()[tileCoords.x + 1][tileCoords.y];
+                if (tileToTaint != null) tileToTaint.Taint();
+            }
+
+            if (tileCoords.y - 1 >= 0) {
+                Tile tileToTaint = gameLevel.GetMap()[tileCoords.x][tileCoords.y - 1];
+                if (tileToTaint != null) tileToTaint.Taint();
+            }
+
+            if (tileCoords.y + 1 < gameLevel.GetMap()[tileCoords.x].Length) {
+                Tile tileToTaint = gameLevel.GetMap()[tileCoords.x][tileCoords.y + 1];
+                if (tileToTaint != null) tileToTaint.Taint();
+            }
         }
     }
 
@@ -97,14 +112,17 @@ public class Tile : MonoBehaviour {
     }
 
     /// <summary>
-    /// This performs the Mergeable object reference-handling when that object is moved from one tile to another.
+    /// This performs the Mergeable object reference-handling when that object is moved from one tile to another,
+    /// and physically moves that object if possible.
     /// </summary>
     /// <param name="obj"></param>
     /// <param name="from"></param>
     /// <param name="to"></param>
     public static void MoveToTile(Mergeable obj, Tile from, Tile to) {
-        PlaceOnTile(obj, to);
         RemoveFromTile(obj, from);
+        PlaceOnTile(obj, to);
+        obj.transform.position = to.transform.position;
+        obj.SetLocation(to);
     }
 
     /// <summary>

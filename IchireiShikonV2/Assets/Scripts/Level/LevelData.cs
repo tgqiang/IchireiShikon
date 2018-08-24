@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
 /// <summary>
 /// This class acts as a data structure encapsulating all required data of a game level.
@@ -11,6 +12,10 @@ public class LevelData {
     /// Tiles in this map are accessed with {row, column} coordinates, where 'x' denotes row and 'y' denotes column.
     /// </summary>
     public Tile[][] tileMap;
+    /// <summary>
+    /// Contains the maximal boundaries of the tile map, in the form of {MAX_ROWS, MAX_COLUMNS}.
+    /// </summary>
+    public Vector2Int mapBounds;
     /// <summary>
     /// A list that tracks all the tainted tiles that exist in the level.
     /// This is required for performing the taint-spreading feature.
