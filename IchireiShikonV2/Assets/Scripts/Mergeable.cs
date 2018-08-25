@@ -94,6 +94,18 @@ public class Mergeable : MonoBehaviour {
         // Empty body, to be overriden by subclasses.
     }
 
+    /// <summary>
+    /// Determines the level of the spawned spirit after souls/spirits have been merged together.
+    /// 
+    /// If a spirit is spawned from merging of souls, 'mergedObjectLevel' argument should not be supplied.
+    /// </summary>
+    /// <param name="mergedObjectCount">The number of objects used in the merge.</param>
+    /// <param name="mergedObjectLevel">The level of the spirit objects used in the merge, if they are merged to form a higher-level spirit.</param>
+    /// <returns>The computed level of the spirit to be spawned after the merge.</returns>
+    public virtual int DetermineSpawnedSpiritLevel(int mergedObjectCount, int mergedObjectLevel = 0) {
+        return mergedObjectLevel + Mathf.Min(Mathf.FloorToInt((mergedObjectCount - 1) / 2), SPIRIT_LEVEL_MAX);
+    }
+
     public virtual bool IsSameTypeAs(Mergeable other) {
         return false;
     }

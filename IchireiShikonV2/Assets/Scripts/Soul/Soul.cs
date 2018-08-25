@@ -26,7 +26,7 @@ public class Soul : Mergeable {
     }
 
     public override void SpawnObjectOnMerge(Mergeable triggeringObject, int mergedObjectCount) {
-        int spiritLevel = Mathf.Min(Mathf.FloorToInt((mergedObjectCount - 1) / 2), SPIRIT_LEVEL_MAX);
+        int spiritLevel = DetermineSpawnedSpiritLevel(mergedObjectCount);
         Spirit spawnedSpirit = FindObjectOfType<ObjectSpawner>().SpawnSpirit((int) soulType, spiritLevel, triggeringObject.transform.position).GetComponent<Spirit>();
         spawnedSpirit.CurrentLocation = triggeringObject.CurrentLocation;
         Tile.PlaceOnTile(spawnedSpirit, triggeringObject.CurrentLocation);
