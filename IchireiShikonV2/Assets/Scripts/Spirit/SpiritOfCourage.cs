@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpiritOfCourage : Spirit {
 
     [SerializeField]
-    protected SpriteRenderer areaOfEffect;
+    SpriteRenderer areaOfEffect;
 
     public override void Start() {
         base.Start();
@@ -38,12 +38,10 @@ public class SpiritOfCourage : Spirit {
                 Tile target = tileMap[row][col];
                 if (target != null) {
                     target.Purify();
-                    ///* NOTE: Uncomment this to disable degrade-on-trigger feature.
                     if (CurrentLocation.tileCoords == new Vector2Int(row, col)) {
                         DegradeAfterTrigger();
                         continue;
                     }
-                    //*/
                     if (!target.IsVacant()) {
                         FindObjectOfType<ObjectSpawner>().RemoveObjectFromGame(target.objectOnTile.gameObject);
                         target.objectOnTile = null;
