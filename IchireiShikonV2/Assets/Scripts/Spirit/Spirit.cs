@@ -31,6 +31,14 @@ public class Spirit : Mergeable {
         GetComponent<SpriteRenderer>().sprite = sprites[spiritLevel - 1];
     }
 
+    public virtual void ShowAreaOfEffect() {
+        // Empty body, to be overriden by subclasses.
+    }
+
+    public virtual void HideAreaOfEffect() {
+        // Empty body, to be overriden by subclasses.
+    }
+
     public override void Merge() {
         base.Merge();
     }
@@ -38,8 +46,8 @@ public class Spirit : Mergeable {
     public override void SpawnObjectOnMerge(Mergeable triggeringObject, int mergedObjectCount) {
         int spiritLevel = Mathf.Min(this.spiritLevel + Mathf.FloorToInt((mergedObjectCount - 1) / 2), SPIRIT_LEVEL_MAX);
         Spirit spawnedSpirit = FindObjectOfType<ObjectSpawner>().SpawnSpirit((int) spiritType, spiritLevel, triggeringObject.transform.position).GetComponent<Spirit>();
-        spawnedSpirit.SetLocation(triggeringObject.GetLocation());
-        Tile.PlaceOnTile(spawnedSpirit, triggeringObject.GetLocation());
+        spawnedSpirit.CurrentLocation = triggeringObject.CurrentLocation;
+        Tile.PlaceOnTile(spawnedSpirit, triggeringObject.CurrentLocation);
     }
 
     public override bool IsSameTypeAs(Mergeable other) {
@@ -52,5 +60,14 @@ public class Spirit : Mergeable {
 
     public virtual void TriggerEffect() {
         // Empty body, to be overriden in subclasses.
+    }
+
+    protected virtual void DegradeAfterTrigger() {
+        if (spiritLevel > 1) {
+            spiritLevel--;
+            GetComponent<SpriteRenderer>().sprite = sprites[spiritLevel - 1];
+        } else {
+            FindObjectOfType<ObjectSpawner>().RemoveObjectFromGame(gameObject);
+        }
     }
 }

@@ -5,10 +5,7 @@ using UnityEngine;
 public class InputManager : MonoBehaviour {
 
     const string LAYER_NAME_TILE = "Tile";
-    const float MOUSE_TAP_INPUT_TIME = 0.25f;
-
-    const float ALPHA_FULL = 1f;
-    const float ALPHA_HALF = 0.65f;
+    const float MOUSE_TAP_INPUT_TIME = 0.15f;
 
     float timePassedSinceButtonClick;
 
@@ -41,7 +38,11 @@ public class InputManager : MonoBehaviour {
         if (hit.collider != null) {
             selectedTile = hit.collider.gameObject.GetComponent<Tile>();
             selectedObject = selectedTile.objectOnTile;
-            if (selectedObject != null) selectedObject.gameObject.GetComponent<SpriteRenderer>().color = Color.white.WithAlpha(ALPHA_HALF);
+            if (selectedObject != null) {
+                if (selectedObject is Spirit) {
+                    (selectedObject as Spirit).ShowAreaOfEffect();
+                }
+            }
         }
     }
 
@@ -55,6 +56,7 @@ public class InputManager : MonoBehaviour {
                 if (currentTile.IsVacant(selectedObject)) {
                     highlighter.transform.position = currentTile.transform.position;
                     highlighter.SetActive(true);
+                    selectedObject.gameObject.transform.position = currentTile.transform.position;
                 } else {
                     highlighter.SetActive(false);
                 }
@@ -67,13 +69,15 @@ public class InputManager : MonoBehaviour {
     void OnRelease() {
         if (selectedObject != null) {
             highlighter.SetActive(false);
+            if (selectedObject is Spirit) {
+                (selectedObject as Spirit).HideAreaOfEffect();
+            }
 
             bool wasDisplacedFromOriginalLocation = false;
 
             if (currentTile != null && currentTile.IsVacant(selectedObject)) {
                 if (selectedTile != currentTile) wasDisplacedFromOriginalLocation = true;
                 Tile.MoveToTile(selectedObject, selectedTile, currentTile);
-                selectedObject.gameObject.GetComponent<SpriteRenderer>().color = Color.white.WithAlpha(ALPHA_FULL);
             }
 
             if (timePassedSinceButtonClick <= MOUSE_TAP_INPUT_TIME) {
