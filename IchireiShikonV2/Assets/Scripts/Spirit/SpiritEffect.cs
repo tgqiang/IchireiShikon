@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class SpiritEffect : MonoBehaviour {
 
+    /// <summary>
+    /// A coordinate-offset vector, in the form of {row, column}.
+    /// 
+    /// This attribute is used to obtain the tile that this effect will take effect on,
+    /// with respect to the triggering spirit object.
+    /// </summary>
     [SerializeField]
-    Vector2Int offsetFromCenter;
+    protected Vector2Int offsetFromCenter;
 
     public virtual void ExertEffect(Vector2Int centerCoords, Vector2Int mapBounds, Tile[][] tileMap) {
         Vector2Int targetCoords = centerCoords + offsetFromCenter;
@@ -13,7 +19,13 @@ public class SpiritEffect : MonoBehaviour {
         if (targetCoords.x.IsBetweenExclusive(0, mapBounds.x) &&
             targetCoords.y.IsBetweenExclusive(0, mapBounds.y)) {
             Tile targetTile = tileMap[targetCoords.x][targetCoords.y];
-            if (targetTile != null) PerformEffect(targetTile);
+            if (targetTile != null) {
+                if (GetComponentInParent<Spirit>().IsTainted) {
+                    targetTile.Taint();
+                } else {
+                    PerformEffect(targetTile);
+                }
+            }
         }
     }
 
