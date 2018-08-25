@@ -26,7 +26,15 @@ public class Tile : MonoBehaviour {
         gameLevel = FindObjectOfType<Level>();
     }
 
-    public bool IsVacant(Mergeable obj) {
+    /// <summary>
+    /// Tests whether this tile is vacant.
+    /// 
+    /// If 'obj' argument is supplied, it also tests if the tile already contains 'obj'.
+    /// If the tile already contains 'obj', that tile is deemed to be vacant.
+    /// </summary>
+    /// <param name="obj">The object, to test if it is already contained in a desired tile.</param>
+    /// <returns>True, if this tile isn't holding anything, or if this tile already contains 'obj'; False otherwise.</returns>
+    public bool IsVacant(Mergeable obj = null) {
         return objectOnTile == null || objectOnTile == obj;
     }
 
@@ -53,28 +61,24 @@ public class Tile : MonoBehaviour {
     }
 
     public void Purify() {
-        if (isTainted) {
-            isTainted = false;
-            isPurified = true;
-            isInvulnerable = false;
-            GetComponent<SpriteRenderer>().sprite = tileSprites[(int) CustomEnums.TileType.PURIFIED];
+        isTainted = false;
+        isPurified = true;
+        isInvulnerable = false;
+        GetComponent<SpriteRenderer>().sprite = tileSprites[(int) CustomEnums.TileType.PURIFIED];
 
-            if (gameLevel.levelData.taintedTiles.Contains(this)) {
-                gameLevel.levelData.taintedTiles.Remove(this);
-            }
+        if (gameLevel.levelData.taintedTiles.Contains(this)) {
+            gameLevel.levelData.taintedTiles.Remove(this);
         }
     }
 
     public void PurifyWithBarrier() {
-        if (isTainted) {
-            isTainted = false;
-            isPurified = true;
-            isInvulnerable = true;
-            GetComponent<SpriteRenderer>().sprite = tileSprites[(int) CustomEnums.TileType.INVULNERABLE];
+        isTainted = false;
+        isPurified = true;
+        isInvulnerable = true;
+        GetComponent<SpriteRenderer>().sprite = tileSprites[(int) CustomEnums.TileType.INVULNERABLE];
 
-            if (gameLevel.levelData.taintedTiles.Contains(this)) {
-                gameLevel.levelData.taintedTiles.Remove(this);
-            }
+        if (gameLevel.levelData.taintedTiles.Contains(this)) {
+            gameLevel.levelData.taintedTiles.Remove(this);
         }
     }
 
@@ -122,7 +126,7 @@ public class Tile : MonoBehaviour {
         RemoveFromTile(obj, from);
         PlaceOnTile(obj, to);
         obj.transform.position = to.transform.position;
-        obj.SetLocation(to);
+        obj.CurrentLocation = to;
     }
 
     /// <summary>
