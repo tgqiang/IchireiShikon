@@ -579,7 +579,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 944524a67af2e73478859ad5aa1d614a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetFromCenter: {x: -3, y: 0}
+  offsetFromCenter: {x: 0, y: -3}
 --- !u!114 &114071543523257976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -591,7 +591,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 944524a67af2e73478859ad5aa1d614a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetFromCenter: {x: -1, y: 1}
+  offsetFromCenter: {x: -1, y: -1}
 --- !u!114 &114088781035708784
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -603,7 +603,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 944524a67af2e73478859ad5aa1d614a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetFromCenter: {x: -2, y: -2}
+  offsetFromCenter: {x: 2, y: -2}
 --- !u!114 &114144432619215658
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -615,7 +615,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 944524a67af2e73478859ad5aa1d614a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetFromCenter: {x: 0, y: 2}
+  offsetFromCenter: {x: -2, y: 0}
 --- !u!114 &114150352101659546
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -627,7 +627,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 944524a67af2e73478859ad5aa1d614a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetFromCenter: {x: 1, y: 1}
+  offsetFromCenter: {x: -1, y: 1}
 --- !u!114 &114221103698753578
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -639,7 +639,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 944524a67af2e73478859ad5aa1d614a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetFromCenter: {x: 0, y: 3}
+  offsetFromCenter: {x: -3, y: 0}
 --- !u!114 &114272399657494350
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -686,7 +686,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 944524a67af2e73478859ad5aa1d614a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetFromCenter: {x: -1, y: -1}
+  offsetFromCenter: {x: 1, y: -1}
 --- !u!114 &114340030032365614
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -698,7 +698,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 944524a67af2e73478859ad5aa1d614a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetFromCenter: {x: 0, y: -3}
+  offsetFromCenter: {x: 3, y: 0}
 --- !u!114 &114363335029775404
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -710,7 +710,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 944524a67af2e73478859ad5aa1d614a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetFromCenter: {x: -2, y: 2}
+  offsetFromCenter: {x: -2, y: -2}
 --- !u!114 &114365071924018908
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -734,7 +734,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 944524a67af2e73478859ad5aa1d614a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetFromCenter: {x: 3, y: 0}
+  offsetFromCenter: {x: 0, y: 3}
 --- !u!114 &114446616725272172
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -746,7 +746,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 944524a67af2e73478859ad5aa1d614a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetFromCenter: {x: 2, y: 2}
+  offsetFromCenter: {x: -2, y: 2}
 --- !u!114 &114714675859352060
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -758,7 +758,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 944524a67af2e73478859ad5aa1d614a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetFromCenter: {x: -2, y: 0}
+  offsetFromCenter: {x: 0, y: -2}
 --- !u!114 &114787469874030952
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -770,7 +770,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 944524a67af2e73478859ad5aa1d614a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetFromCenter: {x: 2, y: -2}
+  offsetFromCenter: {x: 2, y: 2}
 --- !u!114 &114897386310683978
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -782,7 +782,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 944524a67af2e73478859ad5aa1d614a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetFromCenter: {x: 2, y: 0}
+  offsetFromCenter: {x: 0, y: 2}
 --- !u!114 &114948085020173972
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -794,7 +794,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 944524a67af2e73478859ad5aa1d614a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetFromCenter: {x: 1, y: -1}
+  offsetFromCenter: {x: 1, y: 1}
 --- !u!114 &114977302351265882
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -806,7 +806,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 944524a67af2e73478859ad5aa1d614a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  offsetFromCenter: {x: 0, y: -2}
+  offsetFromCenter: {x: 2, y: 0}
 --- !u!212 &212027650686283720
 SpriteRenderer:
   m_ObjectHideFlags: 1
