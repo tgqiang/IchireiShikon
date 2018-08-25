@@ -104,7 +104,7 @@ public class LevelConstructor : MonoBehaviour {
                 if (soulType > LevelSyntax.NONE) {
                     GameObject soulObj = spawner.SpawnSoul(soulType - 1, spawner.transform.position + new Vector3(col, -row));
                     Soul currentSoul = soulObj.GetComponent<Soul>();
-                    currentSoul.SetLocation(currentTile);
+                    currentSoul.CurrentLocation = currentTile;
                     Tile.PlaceOnTile(currentSoul, currentTile);
                 } else if (spiritType > LevelSyntax.NONE) {
                     // Exception in data #2-B
@@ -122,7 +122,7 @@ public class LevelConstructor : MonoBehaviour {
                     } else {
                         GameObject spiritObj = spawner.SpawnSpirit(spiritType - 1, spiritLevel + 1, spawner.transform.position + new Vector3(col, -row));
                         Spirit currentSpirit = spiritObj.GetComponent<Spirit>();
-                        currentSpirit.SetLocation(currentTile);
+                        currentSpirit.CurrentLocation = currentTile;
                         Tile.PlaceOnTile(currentSpirit, currentTile);
                     }
                 }

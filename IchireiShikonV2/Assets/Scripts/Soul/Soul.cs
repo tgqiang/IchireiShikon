@@ -17,6 +17,10 @@ public class Soul : Mergeable {
         }
 	}
 
+    public override void Taint() {
+        FindObjectOfType<ObjectSpawner>().RemoveObjectFromGame(gameObject);
+    }
+
     public override void Merge() {
         base.Merge();
     }
@@ -24,8 +28,8 @@ public class Soul : Mergeable {
     public override void SpawnObjectOnMerge(Mergeable triggeringObject, int mergedObjectCount) {
         int spiritLevel = Mathf.Min(Mathf.FloorToInt((mergedObjectCount - 1) / 2), SPIRIT_LEVEL_MAX);
         Spirit spawnedSpirit = FindObjectOfType<ObjectSpawner>().SpawnSpirit((int) soulType, spiritLevel, triggeringObject.transform.position).GetComponent<Spirit>();
-        spawnedSpirit.SetLocation(triggeringObject.GetLocation());
-        Tile.PlaceOnTile(spawnedSpirit, triggeringObject.GetLocation());
+        spawnedSpirit.CurrentLocation = triggeringObject.CurrentLocation;
+        Tile.PlaceOnTile(spawnedSpirit, triggeringObject.CurrentLocation);
     }
 
     public override bool IsSameTypeAs(Mergeable other) {
