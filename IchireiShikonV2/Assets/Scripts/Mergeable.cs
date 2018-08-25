@@ -14,6 +14,9 @@ public class Mergeable : MonoBehaviour {
     /// 2. Tainted spirits remain in-game, but will taint tiles in accordance to their AoE when triggered.
     /// </summary>
     protected bool isTainted;
+    public bool IsTainted {
+        get { return isTainted; }
+    }
 
     /// <summary>
     /// This attribute checks for which tile this object is on.

@@ -11,6 +11,9 @@ public class Spirit : Mergeable {
     /// </summary>
     [SerializeField]
     protected int spiritLevel;
+    public int SpiritLevel {
+        get { return spiritLevel; }
+    }
 
     public virtual void Start() {
         if (sprites.Length != Mergeable.SPIRIT_LEVEL_MAX) {
