@@ -11,6 +11,8 @@ public class Tile : MonoBehaviour {
     /// The coordinates on the tile map in {row, column} notation, where 'x' denotes row and 'y' denotes column.
     /// 
     /// Row and column counting starts from top-left corner of the tile map.
+    /// 
+    /// Additionally, row = -Y, column = X if {X,Y} are the X-Y coordinates of the object's transform.
     /// </summary>
     public Vector2Int tileCoords;
 
