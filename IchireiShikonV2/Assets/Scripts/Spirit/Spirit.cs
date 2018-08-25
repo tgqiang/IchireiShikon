@@ -34,6 +34,16 @@ public class Spirit : Mergeable {
         GetComponent<SpriteRenderer>().sprite = sprites[spiritLevel - 1];
     }
 
+    public override void Taint() {
+        base.Taint();
+        GetComponent<ParticleSystem>().Play();
+    }
+
+    public override void Purify() {
+        base.Purify();
+        GetComponent<ParticleSystem>().Stop();
+    }
+
     public virtual void ShowAreaOfEffect() {
         // Empty body, to be overriden by subclasses.
     }
@@ -66,11 +76,15 @@ public class Spirit : Mergeable {
     }
 
     protected virtual void DegradeAfterTrigger() {
+        // NOTE: Comment this body out to disable degrade-on-trigger feature.
         if (spiritLevel > 1) {
             spiritLevel--;
             GetComponent<SpriteRenderer>().sprite = sprites[spiritLevel - 1];
         } else {
             FindObjectOfType<ObjectSpawner>().RemoveObjectFromGame(gameObject);
         }
+
+        // NOTE: uncomment this body out to disable degrade-on-trigger feature.
+        // FindObjectOfType<ObjectSpawner>().RemoveObjectFromGame(gameObject);
     }
 }
