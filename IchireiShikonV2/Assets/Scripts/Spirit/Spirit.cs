@@ -12,6 +12,7 @@ using UnityEngine;
 public class Spirit : Mergeable {
 
     protected CustomEnums.SpiritType spiritType;
+
     /// <summary>
     /// The level of the spirit, which is 1-indexed.
     /// </summary>
@@ -54,12 +55,12 @@ public class Spirit : Mergeable {
     /// </summary>
     public override void Taint() {
         base.Taint();
-        GetComponent<ParticleSystem>().Play();
+        GetComponent<ParticleSystem>().Play(false);
     }
 
     public override void Purify() {
         base.Purify();
-        GetComponent<ParticleSystem>().Stop();
+        GetComponent<ParticleSystem>().Stop(false);
     }
 
     /// <summary>
