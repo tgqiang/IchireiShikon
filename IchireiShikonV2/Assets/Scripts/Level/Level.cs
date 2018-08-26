@@ -24,6 +24,14 @@ public class Level : MonoBehaviour {
     int level;
 
     /// <summary>
+    /// A flag for controlling the execution of the game-over/victory state.
+    /// 
+    /// We need this flag since the game-over/victory state is constantly checked in the <see cref="Update"/> loop
+    /// and we only want to execute these states ONCE.
+    /// </summary>
+    bool isGameTerminationTriggered;
+
+    /// <summary>
     /// This is the data structure containing all required information.
     /// 
     /// For further details about this data structure, see <seealso cref="LevelData"/>.
@@ -43,10 +51,18 @@ public class Level : MonoBehaviour {
 	}
 
     void Update() {
-        if (levelData.taintedTiles.Count == levelData.totalTiles) {
+        if (levelData.taintedTiles.Count >= levelData.totalTiles) {
             // TODO: implement game-over state.
-        } else if (levelData.taintedTiles.IsNullOrEmpty()) {
+            if (!isGameTerminationTriggered) {
+                Debug.Log("Game is over.");
+                isGameTerminationTriggered = true;
+            }
+        } else if (levelData.taintedTiles.Count <= 0) {
             // TODO: implement victory state.
+            if (!isGameTerminationTriggered) {
+                Debug.Log("Victory!");
+                isGameTerminationTriggered = true;
+            }
         }
     }
 
@@ -56,5 +72,19 @@ public class Level : MonoBehaviour {
     /// <returns>A <seealso cref="Tile"/>-2D-array representing the current level's tile map.</returns>
     public Tile[][] GetMap() {
         return levelData.tileMap;
+    }
+
+    /// <summary>
+    /// Updates the list of tainted tiles in the current level.
+    /// This function will also ensure that duplicates are not re-added back into the record of tainted tiles.
+    /// 
+    /// 'null' and duplicate elements are guaranteed to be absent since those are stripped off by
+    /// <seealso cref="Tile.Taint"/> and <seealso cref="Tile.TaintNeighbouringTiles"/>.
+    /// 
+    /// See <seealso cref="LevelData.taintedTiles"/>.
+    /// </summary>
+    /// <param name="newTaintedTiles"></param>
+    public void UpdateTaintedTilesRecord(List<Tile> newTaintedTiles) {
+        levelData.taintedTiles.AddRange(newTaintedTiles);
     }
 }

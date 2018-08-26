@@ -100,17 +100,44 @@ public class InputManager : MonoBehaviour {
             if (timePassedSinceButtonClick <= MOUSE_TAP_INPUT_TIME) {
                 if (selectedObject is Spirit) {
                     (selectedObject as Spirit).TriggerEffect();
+
+                    // Case 1: A turn is consumed when a player triggers a spirit's effect
+                    EndPlayerTurn();
                 }
             } else {
                 if (wasDisplacedFromOriginalLocation) {
                     if (selectedObject is Soul) (selectedObject as Soul).Merge();
                     else if (selectedObject is Spirit) (selectedObject as Spirit).Merge();
+
+                    // Case 2: A turn is also consumed when a player displaces a soul/spirit from its previous location.
+                    EndPlayerTurn();
                 }
             }
             
             selectedObject = null;
+            selectedTile = null;
+            currentTile = null;
         }
 
         timePassedSinceButtonClick = 0;
+    }
+
+    /// <summary>
+    /// When a player's turn ends, all currently-tainted <seealso cref="Tile"/>s will spread their taint to their neighbours.
+    /// </summary>
+    void EndPlayerTurn() {
+        StartCoroutine(SpreadTileTaint(.5f));
+    }
+
+    IEnumerator SpreadTileTaint(float timeDelayBeforeTrigger) {
+        yield return new WaitForSeconds(timeDelayBeforeTrigger);
+        List<Tile> taintedTiles = Tile.gameLevel.levelData.taintedTiles;
+        List<Tile> newTaintedTiles = new List<Tile>();
+
+        foreach (Tile taintedTile in taintedTiles) {
+            newTaintedTiles.AddRange(taintedTile.TaintNeighbouringTiles());
+        }
+
+        Tile.gameLevel.UpdateTaintedTilesRecord(newTaintedTiles);
     }
 }
