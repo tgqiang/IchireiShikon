@@ -5,6 +5,6 @@ using UnityEngine;
 public class SoulKushimitama : Soul {
     public override void Start() {
         base.Start();
-        soulType = CustomEnums.SoulType.NIGIMITAMA;
+        soulType = CustomEnums.SoulType.KUSHIMITAMA;
     }
 }
