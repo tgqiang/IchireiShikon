@@ -32,6 +32,19 @@ public class Tile : MonoBehaviour {
     }
 
     /// <summary>
+    /// This loop ensures that any <seealso cref="Mergeable"/> object that lands on a tainted <see cref="Tile"/>
+    /// becomes tainted.
+    /// 
+    /// See <seealso cref="Soul.Taint"/> and <seealso cref="Spirit.Taint"/> for the specified taint behaviours.
+    /// </summary>
+    void Update() {
+        if (isTainted & !IsVacant()) {
+            if (objectOnTile is Soul) (objectOnTile as Soul).Taint();
+            else if (objectOnTile is Spirit) (objectOnTile as Spirit).Taint();
+        }
+    }
+
+    /// <summary>
     /// Tests whether this tile is vacant.
     /// 
     /// If 'obj' argument is supplied, it also tests if the tile already contains 'obj'.
@@ -45,8 +58,12 @@ public class Tile : MonoBehaviour {
 
     /// <summary>
     /// Taints this <see cref="Tile"/>. This cannot affect invulnerable <see cref="Tile"/>s.
+    /// 
+    /// Returns a reference to itself for record-keeping at a later stage of the taint-spreading.
     /// </summary>
-    public void Taint() {
+    /// <returns>Itself, if this tile was successfully tainted; Null if this tile cannot be tainted or if this tile is already tainted.</returns>
+    public Tile Taint() {
+        // TODO: add a fancier animation for tainting of tile.
         if (!isInvulnerable) {
             if (!isTainted) {
                 isTainted = true;
@@ -61,10 +78,12 @@ public class Tile : MonoBehaviour {
                     }
                 }
 
-                if (!gameLevel.levelData.taintedTiles.Contains(this)) {
-                    gameLevel.levelData.taintedTiles.Add(this);
-                }
+                return this;
+            } else {
+                return null;
             }
+        } else {
+            return null;
         }
     }
 
@@ -72,12 +91,15 @@ public class Tile : MonoBehaviour {
     /// Purifies this <see cref="Tile"/>, which removes the taint present on it.
     /// </summary>
     public void Purify() {
-        isTainted = false;
-        isPurified = true;
-        GetComponent<SpriteRenderer>().sprite = tileSprites[(int) CustomEnums.TileType.PURIFIED];
+        // TODO: add a fancier animation for purification of tile.
+        if (isTainted) {
+            isTainted = false;
+            isPurified = true;
+            if (!isInvulnerable) GetComponent<SpriteRenderer>().sprite = tileSprites[(int) CustomEnums.TileType.PURIFIED];
 
-        if (gameLevel.levelData.taintedTiles.Contains(this)) {
-            gameLevel.levelData.taintedTiles.Remove(this);
+            if (gameLevel.levelData.taintedTiles.Contains(this)) {
+                gameLevel.levelData.taintedTiles.Remove(this);
+            }
         }
     }
 
@@ -85,43 +107,54 @@ public class Tile : MonoBehaviour {
     /// Purifies this <see cref="Tile"/> and renders it invulnerable to <see cref="Taint"/> with a barrier.
     /// </summary>
     public void PurifyWithBarrier() {
-        isTainted = false;
-        isPurified = true;
-        isInvulnerable = true;
-        GetComponent<SpriteRenderer>().sprite = tileSprites[(int) CustomEnums.TileType.INVULNERABLE];
+        if (!isInvulnerable) {
+            isTainted = false;
+            isPurified = true;
+            isInvulnerable = true;
+            GetComponent<SpriteRenderer>().sprite = tileSprites[(int) CustomEnums.TileType.INVULNERABLE];
 
-        if (gameLevel.levelData.taintedTiles.Contains(this)) {
-            gameLevel.levelData.taintedTiles.Remove(this);
+            if (gameLevel.levelData.taintedTiles.Contains(this)) {
+                gameLevel.levelData.taintedTiles.Remove(this);
+            }
         }
     }
 
     /// <summary>
     /// Spreads its own <see cref="Taint"/> to its neighbouring <see cref="Tile"/>s.
+    /// Returns a list of <see cref="Tile"/>s that were (possibly) affected by the taint-spreading from this <see cref="Tile"/>.
     /// 
     /// This is done in the following order: Top, Bottom, Left, Right.
+    /// 
+    /// Developer comment: I am pretty sure the return result should NOT contain duplicates but I am not 100% sure of this.
     /// </summary>
-    public void TaintNeighbouringTiles() {
+    /// <returns>A list of <see cref="Tile"/>s after spreading the taint. NOTE: this list may contain 'null' elements.</returns>
+    public List<Tile> TaintNeighbouringTiles() {
+        List<Tile> newTaintedTiles = new List<Tile>();
+
         if (isTainted) {
             if (tileCoords.x - 1 >= 0) {
                 Tile tileToTaint = gameLevel.GetMap()[tileCoords.x - 1][tileCoords.y];
-                if (tileToTaint != null) tileToTaint.Taint();
+                if (tileToTaint != null) newTaintedTiles.Add(tileToTaint.Taint());
             }
 
             if (tileCoords.x + 1 < gameLevel.GetMap().Length) {
                 Tile tileToTaint = gameLevel.GetMap()[tileCoords.x + 1][tileCoords.y];
-                if (tileToTaint != null) tileToTaint.Taint();
+                if (tileToTaint != null) newTaintedTiles.Add(tileToTaint.Taint());
             }
 
             if (tileCoords.y - 1 >= 0) {
                 Tile tileToTaint = gameLevel.GetMap()[tileCoords.x][tileCoords.y - 1];
-                if (tileToTaint != null) tileToTaint.Taint();
+                if (tileToTaint != null) newTaintedTiles.Add(tileToTaint.Taint());
             }
 
             if (tileCoords.y + 1 < gameLevel.GetMap()[tileCoords.x].Length) {
                 Tile tileToTaint = gameLevel.GetMap()[tileCoords.x][tileCoords.y + 1];
-                if (tileToTaint != null) tileToTaint.Taint();
+                if (tileToTaint != null) newTaintedTiles.Add(tileToTaint.Taint());
             }
         }
+
+        newTaintedTiles.RemoveAll(t => t == null);
+        return newTaintedTiles;
     }
 
     /// <summary>
