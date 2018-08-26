@@ -25,7 +25,7 @@ public class Soul : Mergeable {
     /// When a soul object is tainted, it is instantly destroyed.
     /// </summary>
     public override void Taint() {
-        FindObjectOfType<ObjectSpawner>().RemoveObjectFromGame(gameObject);
+        Tile.RemoveFromTileAndDestroy(this, currentLocation);
     }
 
     /// <summary>
