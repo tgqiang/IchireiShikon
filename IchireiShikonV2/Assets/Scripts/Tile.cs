@@ -20,6 +20,9 @@ public class Tile : MonoBehaviour {
     public bool isPurified;
     public bool isInvulnerable;
 
+    /// <summary>
+    /// This attribute checks for which <seealso cref="Mergeable"/> object is placed on this <see cref="Tile"/>.
+    /// </summary>
     public Mergeable objectOnTile;
 
     public Sprite[] tileSprites;
@@ -40,6 +43,9 @@ public class Tile : MonoBehaviour {
         return objectOnTile == null || objectOnTile == obj;
     }
 
+    /// <summary>
+    /// Taints this <see cref="Tile"/>. This cannot affect invulnerable <see cref="Tile"/>s.
+    /// </summary>
     public void Taint() {
         if (!isInvulnerable) {
             if (!isTainted) {
@@ -62,10 +68,12 @@ public class Tile : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Purifies this <see cref="Tile"/>, which removes the taint present on it.
+    /// </summary>
     public void Purify() {
         isTainted = false;
         isPurified = true;
-        isInvulnerable = false;
         GetComponent<SpriteRenderer>().sprite = tileSprites[(int) CustomEnums.TileType.PURIFIED];
 
         if (gameLevel.levelData.taintedTiles.Contains(this)) {
@@ -73,6 +81,9 @@ public class Tile : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Purifies this <see cref="Tile"/> and renders it invulnerable to <see cref="Taint"/> with a barrier.
+    /// </summary>
     public void PurifyWithBarrier() {
         isTainted = false;
         isPurified = true;
@@ -84,6 +95,11 @@ public class Tile : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Spreads its own <see cref="Taint"/> to its neighbouring <see cref="Tile"/>s.
+    /// 
+    /// This is done in the following order: Top, Bottom, Left, Right.
+    /// </summary>
     public void TaintNeighbouringTiles() {
         if (isTainted) {
             if (tileCoords.x - 1 >= 0) {

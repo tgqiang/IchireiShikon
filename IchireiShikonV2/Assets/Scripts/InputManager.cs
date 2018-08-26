@@ -5,6 +5,10 @@ using UnityEngine;
 public class InputManager : MonoBehaviour {
 
     const string LAYER_NAME_TILE = "Tile";
+
+    /// <summary>
+    /// A constant value for differentiating a click-input and a hold-and-drag input.
+    /// </summary>
     const float MOUSE_TAP_INPUT_TIME = 0.15f;
 
     float timePassedSinceButtonClick;
@@ -12,8 +16,21 @@ public class InputManager : MonoBehaviour {
     [SerializeField]
     GameObject highlighter;
 
+    /// <summary>
+    /// A reference-holder for storing which <see cref="Tile"/> was first clicked on by the player.
+    /// 
+    /// This reference is used to check if a <seealso cref="Mergeable"/> object was placed on its previous tile or not.
+    /// </summary>
     Tile selectedTile;
+
+    /// <summary>
+    /// A reference-holder for storing which <see cref="Tile"/> is the player's cursor currently hovering on.
+    /// </summary>
     Tile currentTile;
+
+    /// <summary>
+    /// A reference-holder for storing which <see cref="Mergeable"/> object was selected (and acted upon) by the player's input.
+    /// </summary>
     Mergeable selectedObject;
 	
 	// Update is called once per frame

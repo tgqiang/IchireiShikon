@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This component is responsible for spawning the various game objects required in the game,
+/// from level-construction to object-spawning from merging of <seealso cref="Mergeable"/>s and triggering of <seealso cref="Spirit"/> effects.
+/// </summary>
 public class ObjectSpawner : MonoBehaviour {
 
     public GameObject[] tilePrefabs;

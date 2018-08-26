@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// <see cref="Soul"/>s are the building blocks of <seealso cref="Spirit"/>s. They must be merged in quantities to form
+/// <seealso cref="Spirit"/>s of different <seealso cref="Spirit.spiritType"/>s and <seealso cref="Spirit.spiritLevel"/>s.
+/// </summary>
 public class Soul : Mergeable {
 
     protected CustomEnums.SoulType soulType;
@@ -17,14 +21,18 @@ public class Soul : Mergeable {
         }
 	}
 
+    /// <summary>
+    /// When a soul object is tainted, it is instantly destroyed.
+    /// </summary>
     public override void Taint() {
         FindObjectOfType<ObjectSpawner>().RemoveObjectFromGame(gameObject);
     }
 
-    public override void Merge() {
-        base.Merge();
-    }
-
+    /// <summary>
+    /// See <see cref="Mergeable.SpawnObjectOnMerge(Mergeable, int)"/>.
+    /// </summary>
+    /// <param name="triggeringObject"></param>
+    /// <param name="mergedObjectCount"></param>
     public override void SpawnObjectOnMerge(Mergeable triggeringObject, int mergedObjectCount) {
         int spiritLevel = DetermineSpawnedSpiritLevel(mergedObjectCount);
         Spirit spawnedSpirit = FindObjectOfType<ObjectSpawner>().SpawnSpirit((int) soulType, spiritLevel, triggeringObject.transform.position).GetComponent<Spirit>();
@@ -32,6 +40,11 @@ public class Soul : Mergeable {
         Tile.PlaceOnTile(spawnedSpirit, triggeringObject.CurrentLocation);
     }
 
+    /// <summary>
+    /// See <see cref="Mergeable.IsSameTypeAs(Mergeable)"/>.
+    /// </summary>
+    /// <param name="other"></param>
+    /// <returns>True if 'other' is of the same type as this one; False otherwise.</returns>
     public override bool IsSameTypeAs(Mergeable other) {
         if (other is Soul) {
             return soulType == (other as Soul).soulType;

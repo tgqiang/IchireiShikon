@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This class acts as the base template for tile-specific <seealso cref="Spirit"/>-effects, where necessary.
+/// </summary>
 public class SpiritEffect : MonoBehaviour {
 
     /// <summary>
@@ -9,6 +12,8 @@ public class SpiritEffect : MonoBehaviour {
     /// 
     /// This attribute is used to obtain the tile that this effect will take effect on,
     /// with respect to the triggering spirit object.
+    /// 
+    /// See also <seealso cref="Tile.tileCoords"/>.
     /// </summary>
     [SerializeField]
     protected Vector2Int offsetFromCenter;

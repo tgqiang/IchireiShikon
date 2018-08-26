@@ -4,7 +4,13 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-[RequireComponent(typeof(Level))]
+/// <summary>
+/// This component is responsible for processing the level data in a level's associating CSV file,
+/// and constructing the level physically in the game.
+/// 
+/// This component also requires a <seealso cref="ObjectSpawner"/> for spawning of game objects when
+/// constructing the level physically in-game.
+/// </summary>
 public class LevelConstructor : MonoBehaviour {
 
     const string LEVEL_PATH = "Assets/Resources/LevelData/L{0}.csv";    // TODO: need to test this functionality in build mode.
@@ -12,6 +18,20 @@ public class LevelConstructor : MonoBehaviour {
 
     const int LEVEL_TILEMAP_MAX_LENGTH = 17;
     const int LEVEL_TILEMAP_MAX_HEIGHT = 9;
+
+    /// <summary>
+    /// The game-object spawner, that is required for spawning physical game-objects in the game.
+    /// 
+    /// For more information about this component, see <seealso cref="ObjectSpawner"/>.
+    /// </summary>
+    static ObjectSpawner spawner;
+
+    void Awake() {
+        spawner = FindObjectOfType<ObjectSpawner>();
+        if (spawner == null) {
+            throw new Exception("The required ObjectSpawner component for constructing the level is missing.");
+        }
+    }
 
     /// <summary>
     /// Parses the contents in a desired level's CSV file into a 2D-int-array, which is subsequently used for level-construction later on.
@@ -55,7 +75,6 @@ public class LevelConstructor : MonoBehaviour {
     /// <param name="tilemapData">The parsed tile map data.</param>
     /// <returns>All data required for the level, represented as a LevelData object.</returns>
     public static LevelData BuildLevel(int[][] tilemapData) {
-        ObjectSpawner spawner = FindObjectOfType<ObjectSpawner>();
         LevelData data = new LevelData {
             tileMap = new Tile[tilemapData.Length][],
             mapBounds = new Vector2Int(tilemapData.Length, tilemapData[0].Length)
