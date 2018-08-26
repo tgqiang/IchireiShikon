@@ -46,7 +46,8 @@ public class Spirit : Mergeable {
     }
 
     /// <summary>
-    /// When <see cref="Spirit"/>s are tainted, they do not <see cref="Purify"/> <seealso cref="Tile"/>s but <see cref="Taint"/> them instead.
+    /// When <see cref="Spirit"/>s are tainted, they do not purify tiles
+    /// (<seealso cref="Tile.Purify"/>) but taint (<seealso cref="Tile.Taint"/>) them instead.
     /// 
     /// Additionally, tainted <see cref="Spirit"/>s show a 'tainted' appearance that is played
     /// by a particle system in this <see cref="Spirit"/>'s object.
