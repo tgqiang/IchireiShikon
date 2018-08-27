@@ -342,6 +342,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   level: 1
+  gameEndPanels:
+  - {fileID: 1709421376}
+  - {fileID: 1415681345}
 --- !u!4 &1208619776
 Transform:
   m_ObjectHideFlags: 0
@@ -497,6 +500,16 @@ Prefab:
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 50a9fe9a432e25f4794063c92e0e2358, type: 2}
   m_IsPrefabAsset: 0
+--- !u!1 &1415681345 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1500045953329008, guid: 50a9fe9a432e25f4794063c92e0e2358,
+    type: 2}
+  m_PrefabInternal: {fileID: 1407858368}
+--- !u!1 &1709421376 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1437843777037888, guid: 50a9fe9a432e25f4794063c92e0e2358,
+    type: 2}
+  m_PrefabInternal: {fileID: 1407858368}
 --- !u!1001 &1880511059
 Prefab:
   m_ObjectHideFlags: 0

@@ -13,6 +13,9 @@ using UnityEngine;
 [RequireComponent(typeof(LevelConstructor), typeof(ObjectSpawner))]
 public class Level : MonoBehaviour {
 
+    const int GAME_OVER = 0;
+    const int GAME_VICTORY = 1;
+
     /// <summary>
     /// The level of the game's scene, which is 1-based.
     /// 
@@ -20,6 +23,9 @@ public class Level : MonoBehaviour {
     /// </summary>
     [SerializeField]
     int level;
+
+    [SerializeField]
+    GameObject[] gameEndPanels;
 
     /// <summary>
     /// A flag for controlling the execution of the game-over/victory state.
@@ -50,18 +56,20 @@ public class Level : MonoBehaviour {
 
     void Update() {
         if (levelData.taintedTiles.Count >= levelData.totalTiles) {
-            // TODO: implement game-over state.
             if (!isGameTerminationTriggered) {
-                Debug.Log("Game is over.");
-                isGameTerminationTriggered = true;
+                TriggerEndGameScreen(GAME_OVER);
             }
         } else if (levelData.taintedTiles.Count <= 0) {
-            // TODO: implement victory state.
             if (!isGameTerminationTriggered) {
-                Debug.Log("Victory!");
-                isGameTerminationTriggered = true;
+                TriggerEndGameScreen(GAME_VICTORY);
             }
         }
+    }
+
+    void TriggerEndGameScreen(int state) {
+        FindObjectOfType<InputManager>().enabled = false;
+        gameEndPanels[state].SetActive(true);
+        isGameTerminationTriggered = true;
     }
 
     /// <summary>
