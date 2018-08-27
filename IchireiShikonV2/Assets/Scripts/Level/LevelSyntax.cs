@@ -1,7 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-
-/// <summary>
+﻿/// <summary>
 /// This class contains the data format declarations of each tile unit of a level's tile-map.
 /// </summary>
 /// 

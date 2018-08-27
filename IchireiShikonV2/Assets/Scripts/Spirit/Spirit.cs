@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// <see cref="Spirit"/> objects have the basic power to purify <seealso cref="Tile"/>s, and different

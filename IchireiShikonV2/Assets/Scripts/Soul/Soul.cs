@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 
 /// <summary>
 /// <see cref="Soul"/>s are the building blocks of <seealso cref="Spirit"/>s. They must be merged in quantities to form

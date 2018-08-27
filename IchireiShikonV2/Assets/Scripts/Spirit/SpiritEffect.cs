@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 /// <summary>
 /// This class acts as the base template for tile-specific <seealso cref="Spirit"/>-effects, where necessary.
