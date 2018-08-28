@@ -1248,7 +1248,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: The lands have been fully purified from evil.
+  m_Text: The darkness has been fully purged from the lands.
 --- !u!114 &114086631692578192
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -2271,7 +2271,7 @@ MonoBehaviour:
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
     m_Font: {fileID: 12800000, guid: 9ce5659b9a0d99545b167c9e81721012, type: 3}
-    m_FontSize: 50
+    m_FontSize: 40
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -2450,7 +2450,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: The lands have been consumed by the darkness.
+  m_Text: The lands have been fully consumed by the darkness.
 --- !u!114 &114583489043191862
 MonoBehaviour:
   m_ObjectHideFlags: 1
