@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using UnityEngine;
 
 /// <summary>
@@ -11,7 +10,8 @@ using UnityEngine;
 /// </summary>
 public class LevelConstructor : MonoBehaviour {
 
-    const string LEVEL_PATH = "Assets/Resources/LevelData/L{0}.csv";    // TODO: need to test this functionality in build mode.
+    const string LEVEL_PATH_BUILD = "LevelData/L{0}.csv";                       // Use this for game build
+    const string LEVEL_PATH_LOCAL = "Assets/Resources/LevelData/L{0}.csv";      // Use this when working in Unity Editor
     const char DELIMITER = ',';
 
     const int LEVEL_TILEMAP_MAX_LENGTH = 17;
@@ -37,8 +37,7 @@ public class LevelConstructor : MonoBehaviour {
     /// <param name="level">The desired level to build, 1-indexed.</param>
     /// <returns>The level data, represented in a 2D-int-array.</returns>
     public static int[][] ParseLevel(int level) {
-        string levelToDecodePath = LEVEL_PATH.Formatted(level);
-        string[] rawData = File.ReadAllLines(levelToDecodePath);
+        string[] rawData = ReadLevelDataFromFile(level);
 
         if (rawData.Length > LEVEL_TILEMAP_MAX_HEIGHT) {
             throw new System.Exception("Level map design exceeds height limit of " + LEVEL_TILEMAP_MAX_HEIGHT + " elements.");
@@ -66,6 +65,20 @@ public class LevelConstructor : MonoBehaviour {
         return decoded;
     }
 
+    private static string[] ReadLevelDataFromFile(int level) {
+        string levelToDecodePath;
+        string[] rawData;
+
+        if (ProjectConfig.BUILD_MODE) {
+            levelToDecodePath = LEVEL_PATH_BUILD.Formatted(level);
+            rawData = levelToDecodePath.LoadFromPeristantDataPath_AsString(null).Split('\n');
+        } else {
+            levelToDecodePath = LEVEL_PATH_LOCAL.Formatted(level);
+            rawData = levelToDecodePath.LoadFrom_AsString().Split('\n');
+        }
+
+        return rawData;
+    }
 
     /// <summary>
     /// Constructs the level, given the data of the tile map obtained after parsing the CSV file.
