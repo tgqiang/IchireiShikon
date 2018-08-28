@@ -23,6 +23,7 @@ public class MainMenu : MonoBehaviour {
     }
 
     public void QuitGame() {
+        LevelRecord.SaveLevelRecordToFile();
         Application.Quit();
     }
 }
