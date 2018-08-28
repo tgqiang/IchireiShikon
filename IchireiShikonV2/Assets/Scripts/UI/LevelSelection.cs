@@ -6,6 +6,11 @@ public class LevelSelection : MonoBehaviour {
 
     const float SCROLLING_DURATION = .3f;
 
+    const int PREV = 0;
+    const int NEXT = 1;
+    const int FIRST = 0;
+    int LAST;
+
     /// <summary>
     /// A list of game chapters.
     /// </summary>
@@ -15,11 +20,11 @@ public class LevelSelection : MonoBehaviour {
     GameObject[] chapterNavButtons;
 
     /// <summary>
-    /// A tracking variable used for handling level-selection chapter-scrolling. This is 1-indexed.
+    /// A tracking variable used for handling level-selection chapter-scrolling. This is 0-indexed.
     /// 
     /// When the level-selection menu loads, the active chapter always defaults to the first chapter.
     /// </summary>
-    int currentChapter = 1;
+    int currentChapter = FIRST;
 
     /// <summary>
     /// A flag used for handling chapter-scrolling animations.
@@ -29,9 +34,8 @@ public class LevelSelection : MonoBehaviour {
 
     void Start() {
         if (chapters.Length > 1) {
-            foreach (GameObject b in chapterNavButtons) {
-                b.SetActive(true);
-            }
+            chapterNavButtons[NEXT].SetActive(true);
+            LAST = chapters.Length - 1;
         }
 
         ShowUnlockedLevels();
@@ -48,8 +52,12 @@ public class LevelSelection : MonoBehaviour {
 
     public void MoveToPreviousChapter() {
         if (!isScrolling) {
-            if (currentChapter > 1) {
+            if (currentChapter > 0) {
+                chapters[currentChapter].SetActive(false);
                 currentChapter--;
+                chapters[currentChapter].SetActive(true);
+                chapterNavButtons[PREV].SetActive(currentChapter > FIRST);
+                chapterNavButtons[NEXT].SetActive(currentChapter < LAST);
                 StartCoroutine(TriggerScrollingAnimation(SCROLLING_DURATION));
             }
         }
@@ -57,8 +65,12 @@ public class LevelSelection : MonoBehaviour {
 
     public void MoveToNextChapter() {
         if (!isScrolling) {
-            if (currentChapter <= chapters.Length) {
+            if (currentChapter < chapters.Length - 1) {
+                chapters[currentChapter].SetActive(false);
                 currentChapter++;
+                chapters[currentChapter].SetActive(true);
+                chapterNavButtons[PREV].SetActive(currentChapter > FIRST);
+                chapterNavButtons[NEXT].SetActive(currentChapter < LAST);
                 StartCoroutine(TriggerScrollingAnimation(SCROLLING_DURATION));
             }
         }
