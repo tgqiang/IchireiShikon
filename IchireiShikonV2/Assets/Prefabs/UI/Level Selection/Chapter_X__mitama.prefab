@@ -552,6 +552,7 @@ GameObject:
   - component: {fileID: 224874071372353856}
   - component: {fileID: 222450574838345372}
   - component: {fileID: 114171869836910968}
+  - component: {fileID: 114158824659732544}
   m_Layer: 5
   m_Name: Chapter_X__mitama
   m_TagString: Untagged
@@ -1352,6 +1353,18 @@ MonoBehaviour:
         m_CallState: 1
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114158824659732544
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1673835630661826}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 50e853bef7fa2664993fb657ca35ae0e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  levels: []
 --- !u!114 &114171869836910968
 MonoBehaviour:
   m_ObjectHideFlags: 1
