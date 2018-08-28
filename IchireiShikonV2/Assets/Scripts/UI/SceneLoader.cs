@@ -11,8 +11,9 @@ using UnityEngine.SceneManagement;
 /// </summary>
 public class SceneLoader : MonoBehaviour {
 
-    public const int SCENE_INDEX_MAIN_MENU = 0;
-    public const int SCENE_INDEX_LEVEL_SELECTION = 1;
+    const int SCENE_INDEX_MAIN_MENU = 0;
+    const int SCENE_INDEX_LEVEL_SELECTION = 1;
+    const int SCENE_INDEX_LEVEL_SCENE = 2;
 
     public static void LoadMainMenu() {
         SceneManager.LoadScene(SCENE_INDEX_MAIN_MENU);
@@ -22,12 +23,29 @@ public class SceneLoader : MonoBehaviour {
         SceneManager.LoadScene(SCENE_INDEX_LEVEL_SELECTION);
     }
 
+    /// <summary>
+    /// Loads a specified game level.
+    /// </summary>
+    /// <param name="chapter">Chapter number of desired level to load, which is 1-based.</param>
+    /// <param name="levelNumber">Level number of desired level to load, which is 1-based.</param>
     public static void LoadGameLevelScene(int chapter, int levelNumber) {
-        // TODO: implement game-level scene loading.
+        Level.SetActiveLevel(chapter, levelNumber);
+        SceneManager.LoadScene(SCENE_INDEX_LEVEL_SCENE);
     }
 
-    public static void LoadNextLevel(int currentLevel) {
-        // TODO: implement next-level scene loading.
+    /// <summary>
+    /// Loads a level what is next-in-line to the current chapter's level.
+    /// </summary>
+    /// <param name="currentChapter">Chapter number of current level, which is 1-based.</param>
+    /// <param name="currentLevel">Level number of current level, which is 1-based.</param>
+    public static void LoadNextLevel(int currentChapter, int currentLevel) {
+        if (currentLevel == LevelRecord.MAX_LEVELS[currentChapter - 1]) {
+            if (currentChapter < LevelRecord.MAX_CHAPTERS) {
+                LoadGameLevelScene(currentChapter + 1, 1);
+            }
+        } else {
+            LoadGameLevelScene(currentChapter, currentLevel + 1);
+        }
     }
 
     public static void ReloadCurrentScene(Scene currentScene) {

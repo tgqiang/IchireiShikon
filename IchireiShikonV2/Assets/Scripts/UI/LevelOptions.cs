@@ -73,7 +73,7 @@ public class LevelOptions : MonoBehaviour {
     /// This function is used for UI buttons shown on the game-over/victory screens.
     /// </summary>
     public void GoToNextLevel() {
-        // TODO: implement loading of next level.
+        SceneLoader.LoadNextLevel(Level.chapter, Level.level);
     }
 
     public void ClosePrompt() {
