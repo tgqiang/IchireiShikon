@@ -57,27 +57,23 @@ public class LevelRecord : MonoBehaviour {
     /// <param name="chapter">The cleared level's chapter, which is 1-indexed.</param>
     /// <param name="level">The level number of the cleared level, which is 1-indexed.</param>
     public static void UnlockNextLevelOnLevelClear(int chapter, int level) {
-        if (chapter > MAX_CHAPTERS) {
-            throw new System.Exception("Invalid chapter number detected when trying to unlock next level in level records. " +
-                "Obtained chapter number [" + chapter + "] when maximum chapters is " + MAX_CHAPTERS + ".");
-        }
-
-        if (!level.IsBetweenInclusive(1, MAX_LEVELS[chapter - 1])) {
-            throw new System.Exception("Invalid level number detected when trying to unlock next level in level records." +
-                "Obtained level number [" + level + "] when maximum levels for chapter [" + chapter + "] is " + MAX_LEVELS[chapter - 1] + ".");
-        }
-
         if (level == MAX_LEVELS[chapter - 1]) {
             if (chapter < MAX_CHAPTERS) {
                 levelProgress[chapter] += 1;
             }
         } else {
-            levelProgress[chapter - 1] += 1;
+            if (level == levelProgress[chapter - 1]) {
+                levelProgress[chapter - 1] += 1;
+            }
         }
 
+        /* DEBUGGING */
+        /* 
         foreach (int levels in levelProgress) {
             Debug.Log(levels);
         }
+        */
+
         SaveLevelRecordToFile();
     }
 
