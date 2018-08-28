@@ -17,15 +17,25 @@ public class Level : MonoBehaviour {
     const int GAME_VICTORY = 1;
 
     /// <summary>
-    /// The level of the game's scene, which is 1-based.
+    /// The chapter number of the game's active scene, which is 1-based.
+    /// 
+    /// Note that a game level's CSV file number = {(chapter number - 1) * 14 + level}.
+    /// 
+    /// See <seealso cref="LevelSelection.currentChapter"/>.
+    /// </summary>
+    public static int chapter;
+
+    /// <summary>
+    /// The level of the game's active scene, which is 1-based.
     /// 
     /// Note that all level's CSV files are to be named L{<see cref="level"/>}.csv.
     /// </summary>
-    [SerializeField]
-    int level;
+    public static int level;
 
     [SerializeField]
     GameObject[] gameEndPanels;
+    [SerializeField]
+    GameObject nextLevelButton;
 
     /// <summary>
     /// A flag for controlling the execution of the game-over/victory state.
@@ -48,7 +58,17 @@ public class Level : MonoBehaviour {
             throw new System.Exception("Level constructor script is missing from game scene.");
         }
 
-        levelData = LevelConstructor.BuildLevel(LevelConstructor.ParseLevel(level));
+        // 'activeLevel' refers to the level data name.
+        int activeLevel = 0;
+        for (int i = 0; i < chapter; i++) {
+            if (i == 0) {
+                activeLevel += level;
+            } else {
+                activeLevel += LevelRecord.MAX_LEVELS[chapter - 1] + level;
+            }
+        }
+
+        levelData = LevelConstructor.BuildLevel(LevelConstructor.ParseLevel(activeLevel));
         if (levelData == null) {
             throw new System.Exception("Level data is missing. Please check LevelConstructor script.");
         }
@@ -66,10 +86,27 @@ public class Level : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Sets the chapter number and the level number of the active game level.
+    /// </summary>
+    /// <param name="chapterNumber">Chapter number of the active level, which is 1-based.</param>
+    /// <param name="levelNumber">The level number of the active level, which is 1-based.</param>
+    public static void SetActiveLevel(int chapterNumber, int levelNumber) {
+        chapter = chapterNumber;
+        level = levelNumber;
+    }
+
     void TriggerEndGameScreen(int state) {
+        isGameTerminationTriggered = true;
         FindObjectOfType<InputManager>().enabled = false;
         gameEndPanels[state].SetActive(true);
-        isGameTerminationTriggered = true;
+
+        if (state == GAME_VICTORY) {
+            if (LevelRecord.HasNextLevel(chapter, level)) {
+                nextLevelButton.SetActive(true);
+                LevelRecord.UnlockNextLevelOnLevelClear(chapter, level);
+            }
+        }
     }
 
     /// <summary>

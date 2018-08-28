@@ -19,6 +19,8 @@ public class LevelSelection : MonoBehaviour {
     [SerializeField]
     GameObject[] chapterNavButtons;
 
+    int chaptersUnlocked = 0;
+
     /// <summary>
     /// A tracking variable used for handling level-selection chapter-scrolling. This is 0-indexed.
     /// 
@@ -33,21 +35,26 @@ public class LevelSelection : MonoBehaviour {
     bool isScrolling;
 
     void Start() {
-        if (chapters.Length > 1) {
-            chapterNavButtons[NEXT].SetActive(true);
-            LAST = chapters.Length - 1;
+        int[] levelProgress = LevelRecord.GetLevelProgress();
+        foreach (int accessibleLevels in levelProgress) {
+            if (accessibleLevels <= 0) break;
+            chaptersUnlocked++;
         }
 
-        ShowUnlockedLevels();
+        if (chaptersUnlocked > 1) {
+            chapterNavButtons[NEXT].SetActive(true);
+            LAST = chaptersUnlocked - 1;
+        }
+
+        ShowUnlockedLevelsInCurrentChapter();
     }
 
     public void ReturnToMainMenu() {
         SceneLoader.LoadMainMenu();
     }
 
-    public void ShowUnlockedLevels() {
-        // TODO: implement level-selection state initialization.
-        // TODO: will also require file IO for reading/writing from level-completed file records.
+    public void ShowUnlockedLevelsInCurrentChapter() {
+        chapters[currentChapter].GetComponent<ChapterLevels>().ShowAccessibleLevels(LevelRecord.GetLevelProgress()[currentChapter]);
     }
 
     public void MoveToPreviousChapter() {
@@ -55,6 +62,7 @@ public class LevelSelection : MonoBehaviour {
             if (currentChapter > 0) {
                 chapters[currentChapter].SetActive(false);
                 currentChapter--;
+                ShowUnlockedLevelsInCurrentChapter();
                 chapters[currentChapter].SetActive(true);
                 chapterNavButtons[PREV].SetActive(currentChapter > FIRST);
                 chapterNavButtons[NEXT].SetActive(currentChapter < LAST);
@@ -68,6 +76,7 @@ public class LevelSelection : MonoBehaviour {
             if (currentChapter < chapters.Length - 1) {
                 chapters[currentChapter].SetActive(false);
                 currentChapter++;
+                ShowUnlockedLevelsInCurrentChapter();
                 chapters[currentChapter].SetActive(true);
                 chapterNavButtons[PREV].SetActive(currentChapter > FIRST);
                 chapterNavButtons[NEXT].SetActive(currentChapter < LAST);
@@ -87,6 +96,6 @@ public class LevelSelection : MonoBehaviour {
     }
 
     public void LoadSelectedLevel(int levelNumber) {
-        SceneLoader.LoadGameLevelScene(currentChapter, levelNumber);
+        SceneLoader.LoadGameLevelScene(currentChapter + 1, levelNumber);
     }
 }
