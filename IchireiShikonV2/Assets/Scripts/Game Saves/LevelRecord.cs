@@ -5,12 +5,8 @@ public class LevelRecord : MonoBehaviour {
 
     public static LevelRecord instance;
 
-    // Use these for build
-    const string SAVE_DIR_BUILD = "SaveFiles";
-    const string SAVE_FILENAME_BUILD = "Progress.txt";
-    
-    // Use this when working in Unity Editor
-    const string SAVE_PATH_LOCAL = "Assets/Resources/SaveFiles/Progress.txt";
+    const string SAVE_FILE_PATH = "SaveFiles/Progress.txt";
+    const char DELIMITER = ',';
 
     /// <summary>
     /// The maximum number of levels in each chapter.
@@ -18,6 +14,8 @@ public class LevelRecord : MonoBehaviour {
     /// Seeing as this may vary due to level design, this attribute is arbitrarily declared here as a temporary implementation measure.
     /// </summary>
     public static readonly int[] MAX_LEVELS = { 3, 0, 0, 0 };
+
+    static string newLevelProgressData = "1";
 
     /// <summary>
     /// The maximum number of chapters in the game.
@@ -92,16 +90,22 @@ public class LevelRecord : MonoBehaviour {
     }
 
     public static int[] LoadLevelRecordFromFile() {
-        string[] records = null;
+        string records;
 
         if (ProjectConfig.BUILD_MODE) {
-            records = SAVE_FILENAME_BUILD.LoadFromPeristantDataPath_AsString(SAVE_DIR_BUILD).Split(',');
+            records = SAVE_FILE_PATH.LoadFromPeristantDataPath_AsString(null);
         } else {
-            records = SAVE_PATH_LOCAL.LoadFrom_AsString().Split(',');
+            records = SAVE_FILE_PATH.LoadFromDataPath_AsString(null);
         }
 
-        levelProgress = Array.ConvertAll<string, int>(records, int.Parse);
-        VerifyLevelRecordIntegrity();
+        if (records.IsNullOrEmpty()) {
+            levelProgress = Array.ConvertAll<string, int>(newLevelProgressData.Split(DELIMITER), int.Parse);
+            SaveLevelRecordToFile();
+        } else {
+            levelProgress = Array.ConvertAll<string, int>(records.Split(DELIMITER), int.Parse);
+            VerifyLevelRecordIntegrity();
+        }
+
         return GetLevelProgress();
     }
 
@@ -110,13 +114,23 @@ public class LevelRecord : MonoBehaviour {
 
         string data = "";
         for (int i = 0; i < levelProgress.Length; i++) {
+            data += levelProgress[i];
             if (i < levelProgress.Length - 1) data.AppendComma();
         }
 
         if (ProjectConfig.BUILD_MODE) {
-            SAVE_DIR_BUILD.SaveToPersistentDataPath(null, SAVE_FILENAME_BUILD);
+            // NOTE: for some reason, data.SaveToPersistentDataPath(null, SAVE_FILE_PATH);
+            // writes into a file named {data} with content {Application.persistentDataPath + SAVE_FILE_PATH}
+            //
+            // This utility function from 'Extension Methods in Unity' package is probably broken.
+            (Application.persistentDataPath + "/" + SAVE_FILE_PATH).SaveTo(data);
         } else {
-            data.SaveTo(SAVE_PATH_LOCAL);
+            // NOTE: for the above case's reason, we also do away with calling
+            // data.SaveToDataPath(null, SAVE_FILE_PATH); in 'Extension Methods in Unity' package.
+            //
+            // Am not entirely sure if data.SaveToDataPath(null, SAVE_FILE_PATH); works in Editor mode
+            // but for safety precautions I would like to avoid weird/unexpected behaviours.
+            (Application.dataPath + "/" + SAVE_FILE_PATH).SaveTo(data);
         }
     }
 
@@ -133,5 +147,12 @@ public class LevelRecord : MonoBehaviour {
                 " levels instead of the specified " + MAX_LEVELS[i] + " levels.");
             }
         }
+    }
+
+    /// <summary>
+    /// This handles level-records when the game was closed via clicking on the 'X' button of the game window.
+    /// </summary>
+    void OnApplicationQuit() {
+        SaveLevelRecordToFile();
     }
 }

@@ -9,9 +9,8 @@ using UnityEngine;
 /// constructing the level physically in-game.
 /// </summary>
 public class LevelConstructor : MonoBehaviour {
-
-    const string LEVEL_PATH_BUILD = "LevelData/L{0}.csv";                       // Use this for game build
-    const string LEVEL_PATH_LOCAL = "Assets/Resources/LevelData/L{0}.csv";      // Use this when working in Unity Editor
+    
+    const string LEVEL_FILE_PATH = "/LevelData/L{0}.csv";
     const char DELIMITER = ',';
 
     const int LEVEL_TILEMAP_MAX_LENGTH = 17;
@@ -66,18 +65,8 @@ public class LevelConstructor : MonoBehaviour {
     }
 
     private static string[] ReadLevelDataFromFile(int level) {
-        string levelToDecodePath;
-        string[] rawData;
-
-        if (ProjectConfig.BUILD_MODE) {
-            levelToDecodePath = LEVEL_PATH_BUILD.Formatted(level);
-            rawData = levelToDecodePath.LoadFromPeristantDataPath_AsString(null).Split('\n');
-        } else {
-            levelToDecodePath = LEVEL_PATH_LOCAL.Formatted(level);
-            rawData = levelToDecodePath.LoadFrom_AsString().Split('\n');
-        }
-
-        return rawData;
+        string levelToDecodePath = Application.streamingAssetsPath + LEVEL_FILE_PATH.Formatted(level);
+        return levelToDecodePath.LoadFrom_AsString().Split('\n');
     }
 
     /// <summary>
