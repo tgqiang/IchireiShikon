@@ -14,6 +14,9 @@
 /// + '-1' is used if nothing exists at that unit.
 public class LevelSyntax {
 
+    public const int LEVEL_TILEMAP_MAX_LENGTH = 17;
+    public const int LEVEL_TILEMAP_MAX_HEIGHT = 9;
+
     /// <summary>
     /// Denotes that nothing should be present at the current tile unit.
     /// </summary>

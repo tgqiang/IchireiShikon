@@ -13,9 +13,6 @@ public class LevelConstructor : MonoBehaviour {
     const string LEVEL_FILE_PATH = "/LevelData/L{0}.csv";
     const char DELIMITER = ',';
 
-    const int LEVEL_TILEMAP_MAX_LENGTH = 17;
-    const int LEVEL_TILEMAP_MAX_HEIGHT = 9;
-
     /// <summary>
     /// The game-object spawner, that is required for spawning physical game-objects in the game.
     /// 
@@ -38,8 +35,8 @@ public class LevelConstructor : MonoBehaviour {
     public static int[][] ParseLevel(int level) {
         string[] rawData = ReadLevelDataFromFile(level);
 
-        if (rawData.Length > LEVEL_TILEMAP_MAX_HEIGHT) {
-            throw new System.Exception("Level map design exceeds height limit of " + LEVEL_TILEMAP_MAX_HEIGHT + " elements.");
+        if (rawData.Length > LevelSyntax.LEVEL_TILEMAP_MAX_HEIGHT) {
+            throw new System.Exception("Level map design exceeds height limit of " + LevelSyntax.LEVEL_TILEMAP_MAX_HEIGHT + " elements.");
         }
 
         int[][] decoded = new int[rawData.Length][];
@@ -47,8 +44,8 @@ public class LevelConstructor : MonoBehaviour {
             string[] l = rawData[i].Split(',');
             int[] row = new int[l.Length];
 
-            if (l.Length > LEVEL_TILEMAP_MAX_LENGTH) {
-                throw new System.Exception("Level map design exceeds length limit of " + LEVEL_TILEMAP_MAX_LENGTH + " elements.");
+            if (l.Length > LevelSyntax.LEVEL_TILEMAP_MAX_LENGTH) {
+                throw new System.Exception("Level map design exceeds length limit of " + LevelSyntax.LEVEL_TILEMAP_MAX_LENGTH + " elements.");
             }
 
             for (int j = 0; j < l.Length; j++) {
