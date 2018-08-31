@@ -33,7 +33,7 @@ public static class UnityFileExtensions
         path.CreateDirectoryIfNotExists();
 
         // save the data
-        File.WriteAllText(data, path);
+        File.WriteAllText(path, data);
     }
 
     /// <summary>

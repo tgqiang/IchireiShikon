@@ -1,0 +1,18 @@
+In the original UnityFileExtensions.cs in 'Extension Methods for Unity' package,
+there exists a bug in file-saving operatives.
+ 
+Before manual developer correction, in their primary
+'SaveTo(this string data, string path)' method, it invokes
+the following line of code when performing file-save:
+
+...
+
+// save the data
+File.WriteAllText(data, path);
+
+However, in C#, the 'File.WriteAllText' function is defined as:
+File.WriteAllText(string path, string contents).
+
+Please note that this has been manually rectified by GeeCue.
+
+~ GeeCue

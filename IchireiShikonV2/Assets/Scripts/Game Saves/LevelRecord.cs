@@ -119,18 +119,9 @@ public class LevelRecord : MonoBehaviour {
         }
 
         if (ProjectConfig.BUILD_MODE) {
-            // NOTE: for some reason, data.SaveToPersistentDataPath(null, SAVE_FILE_PATH);
-            // writes into a file named {data} with content {Application.persistentDataPath + SAVE_FILE_PATH}
-            //
-            // This utility function from 'Extension Methods in Unity' package is probably broken.
-            (Application.persistentDataPath + "/" + SAVE_FILE_PATH).SaveTo(data);
+            data.SaveTo((Application.persistentDataPath + "/" + SAVE_FILE_PATH));
         } else {
-            // NOTE: for the above case's reason, we also do away with calling
-            // data.SaveToDataPath(null, SAVE_FILE_PATH); in 'Extension Methods in Unity' package.
-            //
-            // Am not entirely sure if data.SaveToDataPath(null, SAVE_FILE_PATH); works in Editor mode
-            // but for safety precautions I would like to avoid weird/unexpected behaviours.
-            (Application.dataPath + "/" + SAVE_FILE_PATH).SaveTo(data);
+            data.SaveTo((Application.dataPath + "/" + SAVE_FILE_PATH));
         }
     }
 
