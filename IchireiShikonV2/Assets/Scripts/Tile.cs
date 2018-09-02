@@ -25,8 +25,11 @@ public class Tile : MonoBehaviour {
 
     public Sprite[] tileSprites;
 
+    ParticleSystem tileParticleSystem;
+
     void Start() {
         gameLevel = FindObjectOfType<Level>();
+        tileParticleSystem = GetComponent<ParticleSystem>();
     }
 
     /// <summary>
@@ -58,14 +61,18 @@ public class Tile : MonoBehaviour {
     /// Taints this <see cref="Tile"/>. This cannot affect invulnerable <see cref="Tile"/>s.
     /// 
     /// Returns a reference to itself for record-keeping at a later stage of the taint-spreading.
+    /// This reference-return feature is required because, without differentiating newly-tainted tiles from
+    /// pre-existing tainted tiles, this taint will spread infinitely and this should NOT be the case.
     /// </summary>
+    /// /// <param name="fromEndOfTurn">Indicates whether this taint is performed from end-of-turn taint spreading or not.</param>
     /// <returns>Itself, if this tile was successfully tainted; Null if this tile cannot be tainted or if this tile is already tainted.</returns>
-    public Tile Taint() {
+    public Tile Taint(bool fromEndOfTurn = false) {
         // TODO: add a fancier animation for tainting of tile.
         if (!isInvulnerable) {
             if (!isTainted) {
                 isTainted = true;
                 isPurified = false;
+                PlayParticleEffect(CustomEnums.TileType.TAINTED);
                 GetComponent<SpriteRenderer>().sprite = tileSprites[(int) CustomEnums.TileType.TAINTED];
 
                 if (objectOnTile != null) {
@@ -76,6 +83,12 @@ public class Tile : MonoBehaviour {
                     }
                 }
 
+                if (!fromEndOfTurn) {
+                    if (!gameLevel.levelData.taintedTiles.Contains(this)) {
+                        gameLevel.levelData.taintedTiles.Add(this);
+                    }
+                }
+                
                 return this;
             } else {
                 return null;
@@ -90,10 +103,11 @@ public class Tile : MonoBehaviour {
     /// </summary>
     public void Purify() {
         // TODO: add a fancier animation for purification of tile.
-        if (isTainted) {
+        if (!isPurified || !isInvulnerable) {
             isTainted = false;
             isPurified = true;
-            if (!isInvulnerable) GetComponent<SpriteRenderer>().sprite = tileSprites[(int) CustomEnums.TileType.PURIFIED];
+            PlayParticleEffect(CustomEnums.TileType.PURIFIED);
+            GetComponent<SpriteRenderer>().sprite = tileSprites[(int) CustomEnums.TileType.PURIFIED];
 
             if (gameLevel.levelData.taintedTiles.Contains(this)) {
                 gameLevel.levelData.taintedTiles.Remove(this);
@@ -109,6 +123,7 @@ public class Tile : MonoBehaviour {
             isTainted = false;
             isPurified = true;
             isInvulnerable = true;
+            PlayParticleEffect(CustomEnums.TileType.INVULNERABLE);
             GetComponent<SpriteRenderer>().sprite = tileSprites[(int) CustomEnums.TileType.INVULNERABLE];
 
             if (gameLevel.levelData.taintedTiles.Contains(this)) {
@@ -132,22 +147,22 @@ public class Tile : MonoBehaviour {
         if (isTainted) {
             if (tileCoords.x - 1 >= 0) {
                 Tile tileToTaint = gameLevel.GetMap()[tileCoords.x - 1][tileCoords.y];
-                if (tileToTaint != null) newTaintedTiles.Add(tileToTaint.Taint());
+                if (tileToTaint != null) newTaintedTiles.Add(tileToTaint.Taint(true));
             }
 
             if (tileCoords.x + 1 < gameLevel.GetMap().Length) {
                 Tile tileToTaint = gameLevel.GetMap()[tileCoords.x + 1][tileCoords.y];
-                if (tileToTaint != null) newTaintedTiles.Add(tileToTaint.Taint());
+                if (tileToTaint != null) newTaintedTiles.Add(tileToTaint.Taint(true));
             }
 
             if (tileCoords.y - 1 >= 0) {
                 Tile tileToTaint = gameLevel.GetMap()[tileCoords.x][tileCoords.y - 1];
-                if (tileToTaint != null) newTaintedTiles.Add(tileToTaint.Taint());
+                if (tileToTaint != null) newTaintedTiles.Add(tileToTaint.Taint(true));
             }
 
             if (tileCoords.y + 1 < gameLevel.GetMap()[tileCoords.x].Length) {
                 Tile tileToTaint = gameLevel.GetMap()[tileCoords.x][tileCoords.y + 1];
-                if (tileToTaint != null) newTaintedTiles.Add(tileToTaint.Taint());
+                if (tileToTaint != null) newTaintedTiles.Add(tileToTaint.Taint(true));
             }
         }
 
@@ -205,5 +220,23 @@ public class Tile : MonoBehaviour {
             FindObjectOfType<ObjectSpawner>().RemoveObjectFromGame(obj.gameObject);
             t.objectOnTile = null;
         }
+    }
+
+    void PlayParticleEffect(CustomEnums.TileType tileType) {
+        ParticleSystem.MainModule particleModule = tileParticleSystem.main;
+        
+        switch (tileType) {
+            case CustomEnums.TileType.PURIFIED:
+            case CustomEnums.TileType.INVULNERABLE:
+                particleModule.startColor = Color.white;
+                break;
+            case CustomEnums.TileType.TAINTED:
+                particleModule.startColor = Color.black;
+                break;
+            default:
+                throw new System.Exception("Invalid TileType enum encountered when setting up particle effect to play.");
+        }
+
+        tileParticleSystem.Play();
     }
 }
