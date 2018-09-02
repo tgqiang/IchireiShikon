@@ -14,6 +14,8 @@ public class LevelOptions : MonoBehaviour {
     const int LEVEL_LEAVE_GAME = 2;
 
     [SerializeField]
+    GameObject pausePanel;
+    [SerializeField]
     GameObject promptPanel;
     [SerializeField]
     Text promptText;
@@ -21,6 +23,17 @@ public class LevelOptions : MonoBehaviour {
     int option;
 
     readonly string[] messages = { "Restart level?", "Go to Level Selection?", "Exit to Main Menu?" };
+
+    void Update() {
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            TogglePauseMenu();
+        }
+    }
+
+    private void TogglePauseMenu() {
+        pausePanel.SetActive(!pausePanel.activeSelf);
+        FindObjectOfType<InputManager>().enabled = !pausePanel.activeSelf;
+    }
 
     /// <summary>
     /// Triggers the corresponding prompt when the in-game UI buttons are pressed.
