@@ -346,6 +346,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3885f878751d23a4da91cd0bc2b605b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  winSkyColor: {r: 0, g: 0.76862746, b: 1, a: 0}
+  lossSkyColor: {r: 0, g: 0, b: 0, a: 0}
+  delayBeforeGameEndState: 2
   gameEndPanels:
   - {fileID: 1709421376}
   - {fileID: 1415681345}

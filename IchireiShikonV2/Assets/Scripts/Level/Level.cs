@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
@@ -15,6 +16,11 @@ public class Level : MonoBehaviour {
 
     const int GAME_OVER = 0;
     const int GAME_VICTORY = 1;
+
+    public Color winSkyColor;
+    public Color lossSkyColor;
+
+    public float delayBeforeGameEndState;
 
     /// <summary>
     /// The chapter number of the game's active scene, which is 1-based.
@@ -72,7 +78,9 @@ public class Level : MonoBehaviour {
         if (levelData == null) {
             throw new System.Exception("Level data is missing. Please check LevelConstructor script.");
         }
-	}
+
+        Camera.main.backgroundColor = Color.Lerp(winSkyColor, lossSkyColor, ((float) levelData.taintedTiles.Count) / levelData.totalTiles);
+    }
 
     void Update() {
         if (levelData.taintedTiles.Count >= levelData.totalTiles) {
@@ -99,6 +107,11 @@ public class Level : MonoBehaviour {
     void TriggerEndGameScreen(int state) {
         isGameTerminationTriggered = true;
         FindObjectOfType<InputManager>().enabled = false;
+        StartCoroutine(DisplayEndStateAfterDelay(state, delayBeforeGameEndState));
+    }
+
+    IEnumerator DisplayEndStateAfterDelay(int state, float delay) {
+        yield return new WaitForSeconds(delay);
         gameEndPanels[state].SetActive(true);
 
         if (state == GAME_VICTORY) {
@@ -129,5 +142,7 @@ public class Level : MonoBehaviour {
     /// <param name="newTaintedTiles"></param>
     public void UpdateTaintedTilesRecord(List<Tile> newTaintedTiles) {
         levelData.taintedTiles.AddRange(newTaintedTiles);
+
+        Camera.main.backgroundColor = Color.Lerp(winSkyColor, lossSkyColor, ((float) levelData.taintedTiles.Count) / levelData.totalTiles);
     }
 }

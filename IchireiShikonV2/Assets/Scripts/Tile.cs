@@ -25,11 +25,13 @@ public class Tile : MonoBehaviour {
 
     public Sprite[] tileSprites;
 
-    ParticleSystem tileParticleSystem;
+    [SerializeField]
+    ParticleSystem tileTaintParticleSystem;
+    [SerializeField]
+    ParticleSystem tilePurifyParticleSystem;
 
     void Start() {
         gameLevel = FindObjectOfType<Level>();
-        tileParticleSystem = GetComponent<ParticleSystem>();
     }
 
     /// <summary>
@@ -222,21 +224,17 @@ public class Tile : MonoBehaviour {
         }
     }
 
-    void PlayParticleEffect(CustomEnums.TileType tileType) {
-        ParticleSystem.MainModule particleModule = tileParticleSystem.main;
-        
+    void PlayParticleEffect(CustomEnums.TileType tileType) {        
         switch (tileType) {
             case CustomEnums.TileType.PURIFIED:
             case CustomEnums.TileType.INVULNERABLE:
-                particleModule.startColor = Color.white;
+                tilePurifyParticleSystem.Play();
                 break;
             case CustomEnums.TileType.TAINTED:
-                particleModule.startColor = Color.black;
+                tileTaintParticleSystem.Play();
                 break;
             default:
                 throw new System.Exception("Invalid TileType enum encountered when setting up particle effect to play.");
         }
-
-        tileParticleSystem.Play();
     }
 }
